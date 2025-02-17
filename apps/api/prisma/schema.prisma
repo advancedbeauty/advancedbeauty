@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  email          String  @unique
+  email_verified Boolean @default(false)
+  name           String
+  given_name     String
+  family_name    String?
+  password       String?
+  picture        String?
+  phoneNumber    String?
+  role           String  @default("USER") // "USER", "ADMIN"
+  accountStatus  String  @default("ACTIVE") // "PENDING", "ACTIVE", "BLOCKED"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessions Session[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  token     String   @unique
+  device    String? // Store device information
+  ip        String? // Store IP address
+  userAgent String? // Store browser/app info
+  isValid   Boolean  @default(true)
+  expiresAt DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}

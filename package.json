@@ -1,0 +1,29 @@
+{
+  "name": "advanced-beauty",
+  "description": "The best travel experience provider.",
+  "version": "1.0.0",
+  "author": "Travel Trail Holidays",
+  "private": true,
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@workspace/eslint-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
+    "prettier": "catalog:",
+    "turbo": "^2.3.0",
+    "typescript": "catalog:"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@9.12.3",
+  "dependencies": {
+    "axios": "^1.7.9"
+  }
+}

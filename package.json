@@ -1,29 +1,28 @@
 {
   "name": "advanced-beauty",
-  "description": "The best travel experience provider.",
-  "version": "1.0.0",
-  "author": "Travel Trail Holidays",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
-    "build": "turbo run build",
-    "dev": "turbo run dev --parallel",
-    "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.0.9",
+    "next": "15.1.7",
+    "postcss": "^8.5.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^4.0.9"
   },
   "devDependencies": {
-    "@types/node": "catalog:",
-    "@workspace/eslint-config": "workspace:*",
-    "@workspace/typescript-config": "workspace:*",
-    "prettier": "catalog:",
-    "turbo": "^2.3.0",
-    "typescript": "catalog:"
-  },
-  "engines": {
-    "node": ">=20"
-  },
-  "packageManager": "pnpm@9.12.3",
-  "dependencies": {
-    "axios": "^1.7.9"
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.1.7",
+    "typescript": "^5"
   }
 }

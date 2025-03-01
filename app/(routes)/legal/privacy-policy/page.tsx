@@ -1,4 +1,4 @@
-import PrivacyPolicy from '@/components/legal/privacy-policy'
+import PrivacyPolicy from '@/components/shared/legal/privacy-policy'
 
 const page = () => {
   return <PrivacyPolicy />

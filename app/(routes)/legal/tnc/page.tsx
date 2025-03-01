@@ -1,4 +1,4 @@
-import TermsAndConditions from '@/components/legal/tnc'
+import TermsAndConditions from '@/components/shared/legal/tnc'
 
 const page = () => {
   return <TermsAndConditions />

@@ -1,22 +1,11 @@
 import './globals.css';
 
 import type { Metadata } from 'next';
-import localFont from 'next/font/local';
 import { Poppins } from 'next/font/google';
 
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-});
-
-const customFont = localFont({
-  src: [
-    {
-      path: '../public/fonts/quentin.ttf',
-      weight: '400',
-    },
-  ],
-  variable: '--font-quentin',
 });
 
 export const metadata: Metadata = {
@@ -39,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`{customFont.variable} ${poppins.className} antialiased`}
+        className={`${poppins.className} antialiased`}
       >
         {children}
       </body>

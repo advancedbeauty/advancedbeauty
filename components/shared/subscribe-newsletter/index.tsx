@@ -1,7 +1,7 @@
 import React from 'react'
 import { Roboto_Slab } from 'next/font/google'
-import Section from '../ui/features/Section'
-import Container from '../ui/features/Container'
+import Section from '@/components/ui/features/Section'
+import Container from '@/components/ui/features/Container'
 
 const roboslab = Roboto_Slab({
   subsets: ['latin'],

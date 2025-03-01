@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { IoClose } from 'react-icons/io5';
 import Logo from '@/components/ui/features/Logo';
-import UpperNavbar from '@/components/navbar/upper-navbar';
+import UpperNavbar from '@/components/shared/navbar/upper-navbar';
 import Container from '@/components/ui/features/Container';
 import Section from '@/components/ui/features/Section';
 

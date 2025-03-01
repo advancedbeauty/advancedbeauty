@@ -1,8 +1,8 @@
 import React from 'react';
-import Footer from '@/components/footer';
-import FooterBar from '@/components/footer/footer-bar';
-import SubscribeNewsletter from '@/components/subscribe-newsletter';
-import NavbarMarginLayout from '@/components/ui/navbar-margin-layout';
+import Footer from '@/components/shared/footer';
+import FooterBar from '@/components/shared/footer/footer-bar';
+import SubscribeNewsletter from '@/components/shared/subscribe-newsletter';
+import NavbarMarginLayout from '@/components/shared/navbar/navbar-margin-layout';
 
 interface RoutesLayoutProps {
   children: React.ReactNode;

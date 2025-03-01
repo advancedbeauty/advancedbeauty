@@ -1,12 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import Section from '../ui/features/Section';
-import Container from '../ui/features/Container';
-import SocialIcon from '../ui/features/Socialicon';
 import { CgFacebook } from 'react-icons/cg';
 import { FaInstagram, FaLinkedinIn, FaYoutube } from 'react-icons/fa';
 import { IoIosMail } from 'react-icons/io';
+import Section from '@/components/ui/features/Section';
+import Container from '@/components/ui/features/Container';
+import SocialIcon from '@/components/ui/features/Socialicon';
 
 const Footer = () => {
   return (

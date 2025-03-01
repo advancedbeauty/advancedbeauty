@@ -3,10 +3,10 @@
 import React from 'react';
 import Logo from '@/components/ui/features/Logo';
 import Section from '@/components/ui/features/Section';
-import Menu from '@/components/navbar/lower-navbar/menu';
+import Menu from '@/components/shared/navbar/lower-navbar/menu';
 import IconLink from '@/components/ui/features/Iconlink';
 import Container from '@/components/ui/features/Container';
-import Navlinks from '@/components/navbar/lower-navbar/navlinks';
+import Navlinks from '@/components/shared/navbar/lower-navbar/navlinks';
 
 import { GoSearch } from 'react-icons/go';
 import { BiSolidOffer } from 'react-icons/bi';

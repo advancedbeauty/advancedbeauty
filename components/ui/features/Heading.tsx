@@ -2,7 +2,7 @@ import React from "react"
 
 interface HeadingProps {
   text: string
-  isS?: Boolean
+  isS?: boolean
 }
 
 const Heading: React.FC<HeadingProps> = ({ text, isS }) => {

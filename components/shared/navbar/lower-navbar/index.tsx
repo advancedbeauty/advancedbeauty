@@ -11,7 +11,7 @@ import Navlinks from '@/components/shared/navbar/lower-navbar/navlinks';
 import { GoSearch } from 'react-icons/go';
 import { BiSolidOffer } from 'react-icons/bi';
 import { BsHandbag, BsHandbagFill } from 'react-icons/bs';
-import { RiAccountCircleFill, RiAccountCircleLine } from 'react-icons/ri';
+import { RiAccountCircleLine } from 'react-icons/ri';
 
 const LowerNavbar = () => {
   return (

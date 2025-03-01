@@ -12,7 +12,11 @@ import {
 } from '@/components/ui/carousel';
 import Link from 'next/link';
 
-const Herosection = ({ items }: { items: any[] }) => {
+const Herosection = ({ items }: { items: {
+  title: string;
+  url: string;
+  image: string;
+}[] }) => {
   const plugin = React.useRef(
     Autoplay({ delay: 3000, stopOnInteraction: true }),
   );
@@ -25,7 +29,7 @@ const Herosection = ({ items }: { items: any[] }) => {
       onMouseLeave={plugin.current.reset}
     >
       <CarouselContent>
-        {items.map((item: any) => (
+        {items.map((item) => (
           <CarouselItem key={item.title}>
             <Link href={item.url}>
               <div className="flex aspect-[16/6] items-center justify-center p-6 relative -m-1">

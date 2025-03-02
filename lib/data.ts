@@ -1,3 +1,5 @@
+import { toSlug } from "./utils";
+
 const data = {
   herosection_carousels: [
     {
@@ -107,7 +109,33 @@ const data = {
       id: 4,
       url: "https://www.instagram.com/reel/C_-czqJvUAq/",
     },
-  ]
+  ],
+  ServiceCategoryData: [
+    {
+      id: 1,
+      title: 'Special Deals',
+      get url() { return `/services/${toSlug(this.title)}`; },
+      image: '/images/servicecategory/specialdeals.png',
+    },
+    {
+      id: 2,
+      title: 'Threading',
+      get url() { return `/services/${toSlug(this.title)}`; },
+      image: '/images/servicecategory/threading.webp',
+    },
+    {
+      id: 3,
+      title: 'Pre Bridal',
+      get url() { return `/services/${toSlug(this.title)}`; },
+      image: '/images/servicecategory/prebridal.webp',
+    },
+    {
+      id: 4,
+      title: 'nail extension & art',
+      get url() { return `/services/${toSlug(this.title)}`; },
+      image: '/images/servicecategory/nailextensionandart.jpg',
+    }
+  ],
 };
 
 export default data;

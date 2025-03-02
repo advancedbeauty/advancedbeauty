@@ -11,12 +11,14 @@ import Certificatesection from '@/components/home/certificate';
 import Awardsection from '@/components/home/award';
 import Testimonialsection from '@/components/home/testimonial';
 import InstagramHighlight from '@/components/home/instagramhighlight';
+import ServiceCategory from '@/components/home/servicecategory';
 
 
 const page = () => {
   return (
     <NavbarMarginLayout>
       <Herosection items={data.herosection_carousels}/>
+      <ServiceCategory />
       <InstagramHighlight />
       <Testimonialsection />
       <Awardsection />

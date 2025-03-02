@@ -5,9 +5,9 @@ const Navlinks = () => {
     <div className="flex gap-10 font-medium text-sm uppercase">
       <ActiveLink href="/" text="Home" />
       <ActiveLink href="/services" text="Services" />
-      <ActiveLink href="/shop" text="Shop" />
       <ActiveLink href="/offers" text="Offers" />
       <ActiveLink href="/wishlist" text="Wishlist" />
+      <ActiveLink href="/admin/dashboard" text="Dashboard" />
     </div>
   );
 };

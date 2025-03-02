@@ -37,21 +37,6 @@ const LowerNavbar = () => {
             href="/auth"
           />
           <IconLink activeIcon={BsHandbagFill} icon={BsHandbag} href="/cart" />
-          {/* {isSignedIn ? (
-            <button
-              onClick={() => signOut()}
-              className="bg-[#D9C1A3] rounded-[2px] p-2 text-neutral-950 font-semibold text-sm"
-            >
-              <span>LOGOUT</span>
-            </button>
-          ) : (
-            <Link
-              href={'/auth'}
-              className="bg-[#D9C1A3] rounded-[2px] p-2 text-neutral-950 font-semibold text-sm"
-            >
-              <span>LOGIN</span>
-            </Link>
-          )} */}
         </div>
       </Container>
     </Section>

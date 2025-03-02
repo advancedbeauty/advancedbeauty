@@ -32,35 +32,6 @@ model Service {
   @@map("service")
 }
 
-model Product {
-  id                 String               @id @default(auto()) @map("_id") @db.ObjectId
-  name               String
-  slug               String               @unique
-  category           String
-  images             String[]
-  brand              String
-  description        String?
-  price              Float
-  listPrice          Float
-  countInStock       Int
-  tags               String[]             @default(["new arrival"])
-  colors             String[]             @default(["White", "Red", "Black"])
-  sizes              String[]             @default(["S", "M", "L"])
-  avgRating          Float                @default(0)
-  numReviews         Int                  @default(0)
-  ratingDistribution RatingDistribution[]
-  numSales           Int                  @default(0)
-  isPublished        Boolean              @default(false)
-
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
-
-  reviews            Review[]
-  orderItems         OrderItem[]
-
-  @@map("product")
-}
-
 type RatingDistribution {
   rating Int
   count  Int
@@ -80,7 +51,6 @@ model Review {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Product   Product  @relation(fields: [productId], references: [id])
 
   @@map("review")
 }
@@ -93,7 +63,6 @@ model Order {
   shippingAddress      ShippingAddress
   expectedDeliveryDate DateTime
   paymentMethod        String
-  paymentResult        PaymentResult?
   itemsPrice           Float
   shippingPrice        Float
   taxPrice             Float
@@ -130,82 +99,6 @@ type ShippingAddress {
   phone      String
 }
 
-type PaymentResult {
-  id            String?
-  status        String?
-  email_address String?
-}
-
-model Setting {
-  id                      String          @id @default(auto()) @map("_id") @db.ObjectId
-  common                  CommonSettings
-  site                    SiteSettings
-  carousels               Carousel[]
-  availableLanguages      Language[]
-  defaultLanguage         String
-  availableCurrencies     Currency[]
-  defaultCurrency         String
-  availablePaymentMethods PaymentMethod[]
-  defaultPaymentMethod    String
-  availableDeliveryDates  DeliveryDate[]
-  defaultDeliveryDate     String
-  createdAt               DateTime        @default(now())
-  updatedAt               DateTime        @updatedAt
-}
-
-type CommonSettings {
-  pageSize             Int     @default(9)
-  isMaintenanceMode    Boolean @default(false)
-  freeShippingMinPrice Float   @default(0)
-  defaultTheme         String  @default("light")
-  defaultColor         String  @default("gold")
-}
-
-type SiteSettings {
-  name        String
-  url         String
-  logo        String
-  slogan      String
-  description String
-  keywords    String
-  email       String
-  phone       String
-  author      String
-  copyright   String
-  address     String
-}
-
-type Carousel {
-  title         String
-  url           String
-  image         String
-  buttonCaption String
-}
-
-type Language {
-  name String
-  code String
-}
-
-type Currency {
-  name        String
-  code        String
-  convertRate Float
-  symbol      String
-}
-
-type PaymentMethod {
-  name       String
-  commission Float  @default(0)
-}
-
-type DeliveryDate {
-  name                 String
-  daysToDeliver        Int
-  shippingPrice        Float
-  freeShippingMinPrice Float
-}
-
 model User {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   email         String   @unique
@@ -218,14 +111,4 @@ model User {
   orders        Order[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-}
-
-model WebPage {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  slug        String   @unique
-  content     String
-  isPublished Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 }

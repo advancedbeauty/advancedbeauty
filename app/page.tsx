@@ -12,6 +12,8 @@ import Awardsection from '@/components/home/award';
 import Testimonialsection from '@/components/home/testimonial';
 import InstagramHighlight from '@/components/home/instagramhighlight';
 import ServiceCategory from '@/components/home/servicecategory';
+import TrendingServices from '@/components/home/tendingservices';
+import Aboutsection from '@/components/home/about';
 
 
 const page = () => {
@@ -19,6 +21,8 @@ const page = () => {
     <NavbarMarginLayout>
       <Herosection items={data.herosection_carousels}/>
       <ServiceCategory />
+      <TrendingServices />
+      <Aboutsection />
       <InstagramHighlight />
       <Testimonialsection />
       <Awardsection />

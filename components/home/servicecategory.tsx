@@ -7,7 +7,7 @@ import Heading from '../ui/features/Heading';
 
 const ServiceCategory = () => {
   return (
-    <Section className="py-16 lg:py-20 bg-[#FBF1EA]">
+    <Section className="py-10 lg:py-20 bg-[#FBF1EA]">
       <Container className="w-full">
         <div className='flex gap-5 justify-center items-center'>
         <Heading text='service'/>

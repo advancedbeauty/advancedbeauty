@@ -4,7 +4,6 @@ import Container from '../ui/features/Container';
 import Heading from '../ui/features/Heading';
 import ServiceCard from './servicecard';
 import data from '@/lib/data';
-import { toSlug } from '@/lib/utils';
 
 const ServicePage = () => {
   return (

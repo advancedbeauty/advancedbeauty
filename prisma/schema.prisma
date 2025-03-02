@@ -7,71 +7,225 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Service {
+  id                 String               @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  slug               String               @unique
+  category           String
+  images             String[]
+  description        String?
+  price              Float
+  listPrice          Float
+  tags               String[]             @default(["new arrival"])
+  avgRating          Float                @default(0)
+  numReviews         Int                  @default(0)
+  ratingDistribution RatingDistribution[]
+  numSales           Int                  @default(0)
+  isPublished        Boolean              @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reviews            Review[]
+  orderItems         OrderItem[]
+
+  @@map("service")
+}
+
+model Product {
+  id                 String               @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  slug               String               @unique
+  category           String
+  images             String[]
+  brand              String
+  description        String?
+  price              Float
+  listPrice          Float
+  countInStock       Int
+  tags               String[]             @default(["new arrival"])
+  colors             String[]             @default(["White", "Red", "Black"])
+  sizes              String[]             @default(["S", "M", "L"])
+  avgRating          Float                @default(0)
+  numReviews         Int                  @default(0)
+  ratingDistribution RatingDistribution[]
+  numSales           Int                  @default(0)
+  isPublished        Boolean              @default(false)
+
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+
+  reviews            Review[]
+  orderItems         OrderItem[]
+
+  @@map("product")
+}
+
+type RatingDistribution {
+  rating Int
+  count  Int
+}
+
+model Review {
+  id                 String  @id @default(auto()) @map("_id") @db.ObjectId
+  title              String
+  rating             Int
+  comment            String
+  productId          String  @db.ObjectId
+  isVerifiedPurchase Boolean @default(false)
+  userId             String  @db.ObjectId
+
+  user    User    @relation(fields: [userId], references: [id])
+  service Service @relation(fields: [productId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Product   Product  @relation(fields: [productId], references: [id])
+
+  @@map("review")
+}
+
+model Order {
+  id                   String          @id @default(auto()) @map("_id") @db.ObjectId
+  user                 User            @relation(fields: [userId], references: [id])
+  userId               String          @db.ObjectId
+  items                OrderItem[]
+  shippingAddress      ShippingAddress
+  expectedDeliveryDate DateTime
+  paymentMethod        String
+  paymentResult        PaymentResult?
+  itemsPrice           Float
+  shippingPrice        Float
+  taxPrice             Float
+  totalPrice           Float
+  isPaid               Boolean         @default(false)
+  paidAt               DateTime?
+  isDelivered          Boolean         @default(false)
+  deliveredAt          DateTime?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+}
+
+type OrderItem {
+  product      String  @db.ObjectId
+  clientId     String
+  name         String
+  slug         String
+  image        String
+  category     String
+  price        Float
+  countInStock Int
+  quantity     Int
+  size         String?
+  color        String?
+}
+
+type ShippingAddress {
+  fullName   String
+  street     String
+  city       String
+  postalCode String
+  country    String
+  province   String
+  phone      String
+}
+
+type PaymentResult {
+  id            String?
+  status        String?
+  email_address String?
+}
+
+model Setting {
+  id                      String          @id @default(auto()) @map("_id") @db.ObjectId
+  common                  CommonSettings
+  site                    SiteSettings
+  carousels               Carousel[]
+  availableLanguages      Language[]
+  defaultLanguage         String
+  availableCurrencies     Currency[]
+  defaultCurrency         String
+  availablePaymentMethods PaymentMethod[]
+  defaultPaymentMethod    String
+  availableDeliveryDates  DeliveryDate[]
+  defaultDeliveryDate     String
+  createdAt               DateTime        @default(now())
+  updatedAt               DateTime        @updatedAt
+}
+
+type CommonSettings {
+  pageSize             Int     @default(9)
+  isMaintenanceMode    Boolean @default(false)
+  freeShippingMinPrice Float   @default(0)
+  defaultTheme         String  @default("light")
+  defaultColor         String  @default("gold")
+}
+
+type SiteSettings {
+  name        String
+  url         String
+  logo        String
+  slogan      String
+  description String
+  keywords    String
+  email       String
+  phone       String
+  author      String
+  copyright   String
+  address     String
+}
+
+type Carousel {
+  title         String
+  url           String
+  image         String
+  buttonCaption String
+}
+
+type Language {
+  name String
+  code String
+}
+
+type Currency {
+  name        String
+  code        String
+  convertRate Float
+  symbol      String
+}
+
+type PaymentMethod {
+  name       String
+  commission Float  @default(0)
+}
+
+type DeliveryDate {
+  name                 String
+  daysToDeliver        Int
+  shippingPrice        Float
+  freeShippingMinPrice Float
+}
+
 model User {
-  id             String  @id @default(auto()) @map("_id") @db.ObjectId
-  email          String  @unique
-  email_verified Boolean @default(false)
-  name           String
-  given_name     String
-  family_name    String?
-  password       String?
-  picture        String?
-  phoneNumber    String?
-  role           String  @default("USER") // "USER", "ADMIN"
-  accountStatus  String  @default("ACTIVE") // "PENDING", "ACTIVE", "BLOCKED"
-
-  accounts      Account[]
-  sessions      Session[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("user")
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  email         String   @unique
+  name          String
+  role          String   @default("User")
+  password      String?
+  image         String?
+  emailVerified Boolean  @default(false)
+  reviews       Review[]
+  orders        Order[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
-model Account {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String  @db.ObjectId
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.String
-  access_token      String? @db.String
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.String
-  session_state     String?
- 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
- 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
-  @@map("account")
-  @@unique([provider, providerAccountId])
-}
-
-model Session {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  sessionToken String   @unique
-  userId       String   @db.ObjectId
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("session")
-}
-
-model Faq {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  question  String
-  answer    String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("faq")
+model WebPage {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  slug        String   @unique
+  content     String
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

@@ -7,21 +7,28 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  type CarouselApi
+  type CarouselApi,
 } from '@/components/ui/carousel';
 import Link from 'next/link';
 
-const Herosection = ({ items }: { items: {
-  title: string;
-  url: string;
-  image: string;
-}[] }) => {
+const Herosection = ({
+  items,
+}: {
+  items: {
+    url: string;
+    image: string;
+    isPublished?: boolean;
+  }[];
+}) => {
   const [api, setApi] = React.useState<CarouselApi | null>(null);
   const [current, setCurrent] = React.useState(0);
   const [progress, setProgress] = React.useState(0);
   const [isPlaying, setIsPlaying] = React.useState(true);
   const autoplayDelay = 3000;
   const progressTimerRef = React.useRef<number | null>(null);
+
+  // Filter only published items
+  const publishedItems = items.filter((item) => item.isPublished !== false);
 
   // Setup autoplay plugin
   const autoplayPlugin = React.useRef(
@@ -30,7 +37,7 @@ const Herosection = ({ items }: { items: {
       stopOnInteraction: true,
       stopOnMouseEnter: true,
       playOnInit: true,
-    })
+    }),
   );
 
   // Handle slide selection and tracking
@@ -111,24 +118,27 @@ const Herosection = ({ items }: { items: {
   }, []);
 
   // Dot click handler
-  const handleDotClick = React.useCallback((index: number) => {
-    if (!api) return;
+  const handleDotClick = React.useCallback(
+    (index: number) => {
+      if (!api) return;
 
-    // Temporarily stop autoplay and progress
-    setIsPlaying(false);
-    autoplayPlugin.current.stop();
+      // Temporarily stop autoplay and progress
+      setIsPlaying(false);
+      autoplayPlugin.current.stop();
 
-    // Navigate to the clicked slide
-    api.scrollTo(index);
-    setCurrent(index);
-    setProgress(0);
+      // Navigate to the clicked slide
+      api.scrollTo(index);
+      setCurrent(index);
+      setProgress(0);
 
-    // Resume after a short delay
-    setTimeout(() => {
-      setIsPlaying(true);
-      autoplayPlugin.current.play();
-    }, 100);
-  }, [api]);
+      // Resume after a short delay
+      setTimeout(() => {
+        setIsPlaying(true);
+        autoplayPlugin.current.play();
+      }, 100);
+    },
+    [api],
+  );
 
   // Calculate SVG circle properties
   const getCirclePath = (percent: number) => {
@@ -138,7 +148,7 @@ const Herosection = ({ items }: { items: {
 
     return {
       strokeDasharray: `${circumference}`,
-      strokeDashoffset: `${dashoffset}`
+      strokeDashoffset: `${dashoffset}`,
     };
   };
 
@@ -152,20 +162,20 @@ const Herosection = ({ items }: { items: {
           loop: true,
           align: 'start',
           containScroll: 'trimSnaps',
-          skipSnaps: false
+          skipSnaps: false,
         }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         setApi={setApi}
       >
         <CarouselContent>
-          {items.map((item, index) => (
+          {publishedItems.map((item, index) => (
             <CarouselItem key={`slide-${index}`}>
               <Link href={item.url}>
-                <div className="flex aspect-[16/6.5] items-center justify-center p-6 relative -m-1">
+                <div className="flex aspect-[16/14] sm:aspect-[16/10] md:aspect-[16/8] lg:aspect-[16/6] items-center justify-center p-6 relative -m-1 transition">
                   <Image
                     src={item.image}
-                    alt={item.title}
+                    alt={`Slide ${index + 1}`}
                     fill
                     className="object-cover"
                     priority
@@ -179,7 +189,7 @@ const Herosection = ({ items }: { items: {
 
       {/* Timer rings positioned at bottom right */}
       <div className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 md:bottom-4 md:right-4 flex gap-1 sm:gap-2 z-10">
-        {items.map((_, index) => (
+        {publishedItems.map((_, index) => (
           <button
             key={`dot-${index}`}
             type="button"
@@ -189,7 +199,12 @@ const Herosection = ({ items }: { items: {
             aria-current={current === index ? 'true' : 'false'}
           >
             {/* Background circle */}
-            <svg width="12" height="12" viewBox="0 0 12 12" className="absolute">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              className="absolute"
+            >
               <circle
                 cx="6"
                 cy="6"
@@ -201,7 +216,12 @@ const Herosection = ({ items }: { items: {
             </svg>
 
             {/* Progress circle */}
-            <svg width="12" height="12" viewBox="0 0 12 12" className="absolute">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              className="absolute"
+            >
               <circle
                 cx="6"
                 cy="6"
@@ -210,7 +230,9 @@ const Herosection = ({ items }: { items: {
                 stroke="white"
                 strokeWidth="1.5"
                 transform="rotate(-90 6 6)"
-                style={index === current ? getCirclePath(progress) : getCirclePath(0)}
+                style={
+                  index === current ? getCirclePath(progress) : getCirclePath(0)
+                }
               />
             </svg>
 

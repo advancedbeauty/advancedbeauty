@@ -6,13 +6,21 @@ import SubscribeNewsletter from '@/components/shared/subscribe-newsletter';
 import NavbarMarginLayout from '@/components/shared/navbar/navbar-margin-layout';
 import Herosection from '@/components/home/hero';
 
-import data from '@/data/data';
+import data from '@/lib/data';
+import Certificatesection from '@/components/home/certificate';
+import Awardsection from '@/components/home/award';
+import Testimonialsection from '@/components/home/testimonial';
+import InstagramHighlight from '@/components/home/instagramhighlight';
 
 
 const page = () => {
   return (
     <NavbarMarginLayout>
       <Herosection items={data.herosection_carousels}/>
+      <InstagramHighlight />
+      <Testimonialsection />
+      <Awardsection />
+      <Certificatesection />
       <Faqsection />
       <SubscribeNewsletter />
       <FooterBar />

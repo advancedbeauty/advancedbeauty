@@ -13,7 +13,7 @@ const SubscribeNewsletter = () => {
     <Section className="py-16 sm:py-20 md:py-24 lg:py-28 bg-[#FBF1EA]">
       <Container className="w-full flex flex-col items-center justify-center relative text-center px-4 sm:px-6 lg:px-8">
         <div className="absolute left-1/2 -translate-x-1/2 w-full top-1/2 -translate-y-1/2 pointer-events-none flex justify-center items-center overflow-hidden">
-          <span className="select-none text-[80px] sm:text-[130px] md:text-[200px] lg:text-[250px] xl:text-[300px] font-medium z-[5] text-white opacity-50 whitespace-nowrap">
+          <span className="select-none text-[80px] sm:text-[130px] md:text-[200px] lg:text-[250px] xl:text-[300px] font-medium z-[5] text-[#fdf9f4] whitespace-nowrap">
             Subscribe
           </span>
         </div>

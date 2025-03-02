@@ -11,15 +11,12 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
   type CarouselApi,
 } from '@/components/ui/carousel';
 
 const Testimonialsection = () => {
   const [api, setApi] = useState<CarouselApi | null>(null);
   const [current, setCurrent] = useState(0);
-  const [progress, setProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const autoplayDelay = 5000;
   const progressTimerRef = useRef<number | null>(null);
@@ -44,7 +41,6 @@ const Testimonialsection = () => {
     // Track slide changes
     const onSelect = () => {
       setCurrent(api.selectedScrollSnap());
-      setProgress(0);
     };
 
     api.on('select', onSelect);
@@ -73,8 +69,6 @@ const Testimonialsection = () => {
 
       const elapsed = timestamp - startTime;
       const newProgress = Math.min((elapsed / autoplayDelay) * 100, 100);
-
-      setProgress(newProgress);
 
       if (newProgress < 100) {
         progressTimerRef.current = window.requestAnimationFrame(updateProgress);

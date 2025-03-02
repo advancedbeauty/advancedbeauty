@@ -6,7 +6,8 @@ import Autoplay from 'embla-carousel-autoplay';
 import {
   Carousel,
   CarouselContent,
-  CarouselItem
+  CarouselItem,
+  type CarouselApi
 } from '@/components/ui/carousel';
 import Link from 'next/link';
 
@@ -15,7 +16,7 @@ const Herosection = ({ items }: { items: {
   url: string;
   image: string;
 }[] }) => {
-  const [api, setApi] = React.useState<any>(null);
+  const [api, setApi] = React.useState<CarouselApi | null>(null);
   const [current, setCurrent] = React.useState(0);
   const [progress, setProgress] = React.useState(0);
   const [isPlaying, setIsPlaying] = React.useState(true);

@@ -77,3 +77,20 @@ export async function getServices() {
     return { success: false, error: 'Failed to fetch services' };
   }
 }
+
+export async function getTrendingServices() {
+  try {
+    const services = await prisma.service.findMany({
+      where: {
+        tags: {
+          has: 'trending',
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    return { success: true, data: services };
+  } catch (error) {
+    console.error('Get trending services error:', error);
+    return { success: false, error: 'Failed to fetch trending services' };
+  }
+}

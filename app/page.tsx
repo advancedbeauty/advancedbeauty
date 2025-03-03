@@ -12,7 +12,7 @@ import Awardsection from '@/components/home/award';
 import Testimonialsection from '@/components/home/testimonial';
 import InstagramHighlight from '@/components/home/instagramhighlight';
 import ServiceCategory from '@/components/home/servicecategory';
-import TrendingServices from '@/components/home/tendingservices';
+import TrendingServices from '@/components/home/trendingservices';
 import Aboutsection from '@/components/home/about';
 
 

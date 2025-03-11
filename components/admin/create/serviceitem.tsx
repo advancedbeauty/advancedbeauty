@@ -454,17 +454,16 @@ export default function ServiceItem() {
                             tags: service.tags.join(','),
                             isPublished: service.isPublished,
                           });
-                          try {
-                            const parsedDetails =
-                              typeof service.details === 'string'
-                                ? JSON.parse(service.details)
-                                : service.details || [
-                                    { heading: '', lines: [''] },
-                                  ];
-                            setDetails(parsedDetails);
-                          } catch (error) {
-                            setDetails([{ heading: '', lines: [''] }]);
-                          }
+                          const parsedDetails =
+                            typeof service.details === 'string' &&
+                            service.details
+                              ? JSON.parse(service.details) || [
+                                  { heading: '', lines: [''] },
+                                ]
+                              : service.details || [
+                                  { heading: '', lines: [''] },
+                                ];
+                          setDetails(parsedDetails);
                         }}
                       >
                         <Pencil className="h-4 w-4" />

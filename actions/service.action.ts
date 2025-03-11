@@ -5,6 +5,8 @@ import { revalidatePath } from 'next/cache';
 
 export async function createService(data: FormData) {
   try {
+    const detailsRaw = data.get('details');
+    const details = detailsRaw ? JSON.parse(detailsRaw as string) : [{ heading: '', lines: [''] }];
     const service = await prisma.service.create({
       data: {
         name: data.get('name') as string,
@@ -16,6 +18,7 @@ export async function createService(data: FormData) {
         images: (data.get('images') as string).split(',').filter(Boolean),
         tags: (data.get('tags') as string).split(',').map((tag) => tag.trim()),
         isPublished: data.get('isPublished') === 'true',
+        details,
       },
     });
 
@@ -29,6 +32,8 @@ export async function createService(data: FormData) {
 
 export async function updateService(id: string, data: FormData) {
   try {
+    const detailsRaw = data.get('details');
+    const details = detailsRaw ? JSON.parse(detailsRaw as string) : [{ heading: '', lines: [''] }];
     const service = await prisma.service.update({
       where: { id },
       data: {
@@ -41,6 +46,7 @@ export async function updateService(id: string, data: FormData) {
         images: (data.get('images') as string).split(',').filter(Boolean),
         tags: (data.get('tags') as string).split(',').map((tag) => tag.trim()),
         isPublished: data.get('isPublished') === 'true',
+        details,
       },
     });
 

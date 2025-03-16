@@ -12,7 +12,7 @@ import {
 
 const Faqsection = () => {
   return (
-    <Section className="py-10 md:py-20">
+    <Section className="py-10 md:py-14">
       <Container className="w-full">
         <Heading text="FAQ" isS />
         <div className="mt-10">

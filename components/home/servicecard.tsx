@@ -9,7 +9,7 @@ interface ServiceCardProps {
   src?: string;
   title: string;
   price: number;
-  listingPrice: number; 
+  listingPrice: number;
   category: string;
 }
 

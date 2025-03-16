@@ -75,13 +75,13 @@ const InstagramHighlight = () => {
   }, [api, current, autoplayDelay]);
 
   return (
-    <Section className="py-10 md:py-20">
+    <Section className="py-10 md:py-14">
       <Container className="w-full flex flex-col items-center justify-center relative text-center px-4 sm:px-6 lg:px-8">
         <div className="flex justify-center gap-5">
           <Heading text="instagram" />
           <Heading text="highlights" />
         </div>
-        <div className="w-full mt-10">
+        <div className="w-full mt-10 lg:mt-14">
           <Carousel
             dir="ltr"
             className="w-full"
@@ -94,7 +94,7 @@ const InstagramHighlight = () => {
             }}
             setApi={setApi}
           >
-            <CarouselContent className="py-4 flex gap-2">
+            <CarouselContent className="flex gap-2">
               {data.InstagramData.map((post) => (
                 <CarouselItem
                   key={post.id}

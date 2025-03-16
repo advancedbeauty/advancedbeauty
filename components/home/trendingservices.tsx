@@ -145,13 +145,13 @@ const TrendingServices = () => {
   }, []);
 
   return (
-    <Section className="py-10 lg:py-20">
-      <Container className='w-full'>
+    <Section className="py-10 lg:py-14">
+      <Container className="w-full">
         <div className="flex justify-center items-center gap-5">
           <Heading text="Trending" />
           <Heading text="Services" />
         </div>
-        <div className="w-full mt-10">
+        <div className="w-full mt-10 lg:mt-14">
           <Carousel
             dir="ltr"
             className="w-full"
@@ -167,7 +167,7 @@ const TrendingServices = () => {
             onMouseLeave={handleMouseLeave}
             setApi={setApi}
           >
-            <CarouselContent className="py-4">
+            <CarouselContent className="">
               {services.map((review) => (
                 <CarouselItem
                   key={review.id}

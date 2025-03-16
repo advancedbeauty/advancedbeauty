@@ -6,7 +6,9 @@ import { revalidatePath } from 'next/cache';
 export async function createService(data: FormData) {
   try {
     const detailsRaw = data.get('details');
-    const details = detailsRaw ? JSON.parse(detailsRaw as string) : [{ heading: '', lines: [''] }];
+    const details = detailsRaw
+      ? JSON.parse(detailsRaw as string)
+      : [{ heading: '', lines: [''] }];
     const service = await prisma.service.create({
       data: {
         name: data.get('name') as string,
@@ -33,7 +35,9 @@ export async function createService(data: FormData) {
 export async function updateService(id: string, data: FormData) {
   try {
     const detailsRaw = data.get('details');
-    const details = detailsRaw ? JSON.parse(detailsRaw as string) : [{ heading: '', lines: [''] }];
+    const details = detailsRaw
+      ? JSON.parse(detailsRaw as string)
+      : [{ heading: '', lines: [''] }];
     const service = await prisma.service.update({
       where: { id },
       data: {

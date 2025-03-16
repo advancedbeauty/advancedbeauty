@@ -1,7 +1,7 @@
-import TermsAndConditions from '@/components/shared/legal/tnc'
+import TermsAndConditions from '@/components/shared/legal/tnc';
 
 const page = () => {
-  return <TermsAndConditions />
-}
+  return <TermsAndConditions />;
+};
 
-export default page
+export default page;

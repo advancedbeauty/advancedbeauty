@@ -1,8 +1,8 @@
-import React from "react"
+import React from 'react';
 
 interface HeadingProps {
-  text: string
-  isS?: boolean
+  text: string;
+  isS?: boolean;
 }
 
 const Heading: React.FC<HeadingProps> = ({ text, isS }) => {
@@ -11,7 +11,7 @@ const Heading: React.FC<HeadingProps> = ({ text, isS }) => {
       {text}
       {isS && <span className="text-base sm:text-xl">s</span>}
     </div>
-  )
-}
+  );
+};
 
-export default Heading
+export default Heading;

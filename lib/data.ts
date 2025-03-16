@@ -1,4 +1,4 @@
-import { toSlug } from "./utils";
+import { toSlug } from './utils';
 
 const data = {
   herosection_carousels: [
@@ -42,7 +42,8 @@ const data = {
     {
       id: 1,
       name: 'Kaushiki Kashyap',
-      review: 'Amazing service and so satisfactory, Mrs Kiran is so humble while each and every service highly recommended to each one of you. Good number of experience she is holding which is clearly noticeable in her service. Thanks a lot will surely book again.',
+      review:
+        'Amazing service and so satisfactory, Mrs Kiran is so humble while each and every service highly recommended to each one of you. Good number of experience she is holding which is clearly noticeable in her service. Thanks a lot will surely book again.',
       rating: 5,
       image: '/images/testimonials/testimonial1.png',
       reviewDate: '01/01/2023',
@@ -50,7 +51,8 @@ const data = {
     {
       id: 2,
       name: 'Rakhi Sharma',
-      review: 'I got nail extensions done for my engagement which worked really well and lasted a long time. I also got them done for my bridal ,I have great experience with Advanced Beauty.',
+      review:
+        'I got nail extensions done for my engagement which worked really well and lasted a long time. I also got them done for my bridal ,I have great experience with Advanced Beauty.',
       rating: 5,
       image: '/images/testimonials/testimonial2.png',
       reviewDate: '01/02/2023',
@@ -58,7 +60,8 @@ const data = {
     {
       id: 3,
       name: 'Reetika Malik',
-      review: 'The extensions are beautifully done—natural-looking and sturdy. The nail paint is vibrant and flawless, really enhancing the overall look. The service was professional and friendly, making the experience even better.',
+      review:
+        'The extensions are beautifully done—natural-looking and sturdy. The nail paint is vibrant and flawless, really enhancing the overall look. The service was professional and friendly, making the experience even better.',
       rating: 5,
       image: '/images/testimonials/testimonial3.png',
       reviewDate: '01/03/2023',
@@ -66,7 +69,8 @@ const data = {
     {
       id: 4,
       name: 'Geetanjali Dayal',
-      review: 'Amazing work !! kiran is really calm while doing the extensions and ensures that you are comfortable.She is very good at her work.I would recommend her as her prices are very reasonable and best.',
+      review:
+        'Amazing work !! kiran is really calm while doing the extensions and ensures that you are comfortable.She is very good at her work.I would recommend her as her prices are very reasonable and best.',
       rating: 5,
       image: '/images/testimonials/testimonial4.png',
       reviewDate: '01/04/2023',
@@ -74,7 +78,8 @@ const data = {
     {
       id: 5,
       name: 'Khushi Yadav',
-      review: 'I recently had the pleasure of getting services from Kiran. She did pedicure, manicure, and cleanup for me and I couldn’t be happier with the results. From the moment she walked in, she made me feel comfortable and pampered. The attention to detail was exceptional, and it was clear that she takes great pride in her work.',
+      review:
+        'I recently had the pleasure of getting services from Kiran. She did pedicure, manicure, and cleanup for me and I couldn’t be happier with the results. From the moment she walked in, she made me feel comfortable and pampered. The attention to detail was exceptional, and it was clear that she takes great pride in her work.',
       rating: 5,
       image: '/images/testimonials/testimonial5.png',
       reviewDate: '01/05/2023',
@@ -84,57 +89,67 @@ const data = {
     {
       id: 1,
       question: 'What is salon at home?',
-      answer: 'Salon at Home is a beauty service provider that offers nail and spa services at your home within your own comfort. You just have to contact the advanced beauty which is the best salon at home in Noida and Delhi NCR, choose the service, like nail extensions, facial, waxing, eyelashes extensions, and makeup artist, and select your preferred time and date. Rest will be handled by the salon and the beautician and artist will be sent to your home.',
+      answer:
+        'Salon at Home is a beauty service provider that offers nail and spa services at your home within your own comfort. You just have to contact the advanced beauty which is the best salon at home in Noida and Delhi NCR, choose the service, like nail extensions, facial, waxing, eyelashes extensions, and makeup artist, and select your preferred time and date. Rest will be handled by the salon and the beautician and artist will be sent to your home.',
     },
     {
       id: 2,
       question: 'What are the benefits of salon at home?',
-      answer: 'The benefits of salon at home are numerous. The first and foremost benefit is that you get the services at your home, which means you don’t have to travel to the salon. You can get the services at your own comfort. The second benefit is that you can get the services at your preferred time and date. The third benefit is that you can get the services at a reasonable price. The fourth benefit is that you can get the services from the best beauticians and artists.',
+      answer:
+        'The benefits of salon at home are numerous. The first and foremost benefit is that you get the services at your home, which means you don’t have to travel to the salon. You can get the services at your own comfort. The second benefit is that you can get the services at your preferred time and date. The third benefit is that you can get the services at a reasonable price. The fourth benefit is that you can get the services from the best beauticians and artists.',
     },
   ],
   InstagramData: [
     {
       id: 1,
-      url: "https://www.instagram.com/reel/C3xLL_HNXg2/",
+      url: 'https://www.instagram.com/reel/C3xLL_HNXg2/',
     },
     {
       id: 2,
-      url: "https://www.instagram.com/reel/DDcjZCVz2Iw/",
+      url: 'https://www.instagram.com/reel/DDcjZCVz2Iw/',
     },
     {
       id: 3,
-      url: "https://www.instagram.com/reel/DDmZRzpzdCD/",
+      url: 'https://www.instagram.com/reel/DDmZRzpzdCD/',
     },
     {
       id: 4,
-      url: "https://www.instagram.com/reel/C_-czqJvUAq/",
+      url: 'https://www.instagram.com/reel/C_-czqJvUAq/',
     },
   ],
   ServiceCategoryData: [
     {
       id: 1,
       title: 'Special Deals',
-      get url() { return `/services/${toSlug(this.title)}`; },
+      get url() {
+        return `/services/${toSlug(this.title)}`;
+      },
       image: '/images/servicecategory/specialdeals.png',
     },
     {
       id: 2,
       title: 'Threading',
-      get url() { return `/services/${toSlug(this.title)}`; },
+      get url() {
+        return `/services/${toSlug(this.title)}`;
+      },
       image: '/images/servicecategory/threading.webp',
     },
     {
       id: 3,
       title: 'Pre Bridal',
-      get url() { return `/services/${toSlug(this.title)}`; },
+      get url() {
+        return `/services/${toSlug(this.title)}`;
+      },
       image: '/images/servicecategory/prebridal.webp',
     },
     {
       id: 4,
       title: 'nail extension & art',
-      get url() { return `/services/${toSlug(this.title)}`; },
+      get url() {
+        return `/services/${toSlug(this.title)}`;
+      },
       image: '/images/servicecategory/nailextensionandart.jpg',
-    }
+    },
   ],
 };
 

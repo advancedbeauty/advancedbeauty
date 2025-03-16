@@ -1,12 +1,12 @@
-import React from 'react'
-import { Roboto_Slab } from 'next/font/google'
-import Section from '@/components/ui/features/Section'
-import Container from '@/components/ui/features/Container'
+import React from 'react';
+import { Roboto_Slab } from 'next/font/google';
+import Section from '@/components/ui/features/Section';
+import Container from '@/components/ui/features/Container';
 
 const roboslab = Roboto_Slab({
   subsets: ['latin'],
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-})
+});
 
 const SubscribeNewsletter = () => {
   return (
@@ -37,7 +37,7 @@ const SubscribeNewsletter = () => {
         </form>
       </Container>
     </Section>
-  )
-}
+  );
+};
 
-export default SubscribeNewsletter
+export default SubscribeNewsletter;

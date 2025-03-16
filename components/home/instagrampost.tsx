@@ -30,7 +30,7 @@ const InstagramPost: React.FC<InstagramPostProps> = ({ postUrl }) => {
         const script = document.createElement('script');
         script.src = '//www.instagram.com/embed.js';
         script.async = true;
-        
+
         script.onload = () => {
           if (window.instgrm) {
             window.instgrm.Embeds.process();
@@ -38,7 +38,7 @@ const InstagramPost: React.FC<InstagramPostProps> = ({ postUrl }) => {
             setTimeout(() => setIsLoaded(true), 1500);
           }
         };
-        
+
         document.body.appendChild(script);
       }
     };
@@ -49,7 +49,9 @@ const InstagramPost: React.FC<InstagramPostProps> = ({ postUrl }) => {
   return (
     <div ref={containerRef} className="instagram-embed-container relative">
       {/* Actual Instagram embed */}
-      <div className={`transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+      <div
+        className={`transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+      >
         <blockquote
           className="instagram-media bg-white border-0 rounded-md shadow-md m-1 max-w-[540px] min-w-[326px] p-0 w-[calc(100%-2px)]"
           data-instgrm-permalink={postUrl}
@@ -78,7 +80,12 @@ const InstagramPost: React.FC<InstagramPostProps> = ({ postUrl }) => {
                   xmlns="http://www.w3.org/2000/svg"
                   xmlnsXlink="https://www.w3.org/1999/xlink"
                 >
-                  <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+                  <g
+                    stroke="none"
+                    strokeWidth="1"
+                    fill="none"
+                    fillRule="evenodd"
+                  >
                     <g
                       transform="translate(-511.000000, -20.000000)"
                       fill="#000000"
@@ -127,26 +134,26 @@ const InstagramPost: React.FC<InstagramPostProps> = ({ postUrl }) => {
                 <div className="h-3 bg-gray-300 rounded w-16"></div>
               </div>
             </div>
-            
+
             {/* Image placeholder */}
             <div className="w-full h-64 bg-gray-300 rounded mb-4"></div>
-            
+
             {/* Action buttons */}
             <div className="flex space-x-4 mb-3">
               <div className="w-6 h-6 bg-gray-300 rounded"></div>
               <div className="w-6 h-6 bg-gray-300 rounded"></div>
               <div className="w-6 h-6 bg-gray-300 rounded"></div>
             </div>
-            
+
             {/* Likes count */}
             <div className="h-3 bg-gray-300 rounded w-20 mb-3"></div>
-            
+
             {/* Caption */}
             <div className="space-y-2 mb-4">
               <div className="h-3 bg-gray-300 rounded w-full"></div>
               <div className="h-3 bg-gray-300 rounded w-5/6"></div>
             </div>
-            
+
             {/* View on Instagram button */}
             <div className="h-8 bg-gray-300 rounded w-full mt-4"></div>
           </div>

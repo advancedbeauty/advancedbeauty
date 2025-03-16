@@ -172,7 +172,7 @@ const Herosection = ({
           {publishedItems.map((item, index) => (
             <CarouselItem key={`slide-${index}`}>
               <Link href={item.url}>
-                <div className="flex aspect-[16/14] sm:aspect-[16/10] md:aspect-[16/8] lg:aspect-[16/6] items-center justify-center p-6 relative -m-1 transition">
+                <div className="flex aspect-[16/10] md:aspect-[16/6] items-center justify-center p-6 relative -m-1 transition">
                   <Image
                     src={item.image}
                     alt={`Slide ${index + 1}`}

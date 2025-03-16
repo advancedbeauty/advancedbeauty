@@ -41,16 +41,18 @@ const DashboardSideBar = () => {
   };
 
   return (
-    <Sidebar className='text-white bg-black'>
-      <SidebarHeader className='bg-black'>
+    <Sidebar className="text-white bg-black">
+      <SidebarHeader className="bg-black">
         <Logo />
       </SidebarHeader>
 
       <hr />
 
-      <SidebarContent className='bg-black'>
+      <SidebarContent className="bg-black">
         <SidebarGroup>
-          <SidebarGroupLabel className='text-gray-400'>Dashboard</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-gray-400">
+            Dashboard
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <Link
               href={'/admin/dashboard'}
@@ -61,7 +63,9 @@ const DashboardSideBar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
-          <SidebarGroupLabel className='text-gray-400'>Manage services</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-gray-400">
+            Manage services
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <Link
               href={'/admin/create/service-item'}
@@ -87,11 +91,24 @@ const DashboardSideBar = () => {
             </Link>
           </SidebarGroupContent>
         </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-gray-400">
+            Layout
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <Link
+              href={'/admin/create/hero-banner'}
+              className={getLinkClassName('/admin/create/hero-banner')}
+            >
+              Hero Section
+            </Link>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
 
       <hr />
 
-      <SidebarFooter className='bg-black'>
+      <SidebarFooter className="bg-black">
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <div className="w-full flex gap-2 items-center bg-neutral-800 hover:bg-neutral-700 py-2 px-3 rounded cursor-pointer transition-colors duration-200">

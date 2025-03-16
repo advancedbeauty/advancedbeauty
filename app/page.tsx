@@ -15,11 +15,10 @@ import ServiceCategory from '@/components/home/servicecategory';
 import TrendingServices from '@/components/home/trendingservices';
 import Aboutsection from '@/components/home/about';
 
-
 const page = () => {
   return (
     <NavbarMarginLayout>
-      <Herosection items={data.herosection_carousels}/>
+      <Herosection items={data.herosection_carousels} />
       <ServiceCategory />
       <TrendingServices />
       <Aboutsection />

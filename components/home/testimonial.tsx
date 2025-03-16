@@ -106,10 +106,10 @@ const Testimonialsection = () => {
   }, []);
 
   return (
-    <Section className="py-16 lg:py-20 bg-[#FBF1EA]">
+    <Section className="py-10 lg:py-14 bg-[#FBF1EA]">
       <Container className="w-full flex flex-col items-center justify-center relative text-center px-4 sm:px-6 lg:px-8">
         <Heading text="testimonials" />
-        <div className="w-full mt-10">
+        <div className="w-full mt-10 lg:mt-14">
           <Carousel
             dir="ltr"
             className="w-full"
@@ -125,7 +125,7 @@ const Testimonialsection = () => {
             onMouseLeave={handleMouseLeave}
             setApi={setApi}
           >
-            <CarouselContent className="py-4">
+            <CarouselContent className="pb-4">
               {data.TestimonialData.map((review) => (
                 <CarouselItem
                   key={review.id}
@@ -143,9 +143,13 @@ const Testimonialsection = () => {
             </CarouselContent>
           </Carousel>
         </div>
-        <div className='mt-7 text-sm flex flex-col items-center'>
-          <span><strong>Google</strong> rating score: <strong>4.9</strong> of 5,</span>
-          <span>based on <strong>186 reviews</strong></span>
+        <div className="mt-7 text-sm flex flex-col items-center">
+          <span>
+            <strong>Google</strong> rating score: <strong>4.9</strong> of 5,
+          </span>
+          <span>
+            based on <strong>186 reviews</strong>
+          </span>
         </div>
       </Container>
     </Section>

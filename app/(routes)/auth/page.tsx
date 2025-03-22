@@ -1,5 +1,5 @@
-import AuthPage from '@/components/auth';
 import React from 'react';
+import AuthPage from '@/components/auth';
 
 const page = () => {
   return <AuthPage />;

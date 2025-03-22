@@ -1,10 +1,31 @@
+'use client';
+
+import Link from 'next/link';
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { signIn } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Section from '../ui/features/Section';
 import Container from '../ui/features/Container';
-import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const AuthPage = () => {
+  const router = useRouter();
+  const { data: session } = useSession();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
+  useEffect(() => {
+    if (session) {
+      router.push(callbackUrl);
+    }
+  }, [session, router, callbackUrl]);
+  const handleSignIn = async () => {
+    try {
+      await signIn('google', { callbackUrl: callbackUrl });
+    } catch (error) {
+      console.error('Unexpected Sign-in Error:', error);
+    }
+  };
   return (
     <Section className="min-h-[50vh]">
       <Container className="mt-10 md:mt-20 mb-20 flex flex-col gap-7">
@@ -18,8 +39,8 @@ const AuthPage = () => {
           </span>
         </div>
         <button
-          
-          className="bg-white border border-gray-300 rounded-sm py-2 font-medium flex items-center justify-center gap-2"
+          onClick={handleSignIn}
+          className="bg-white border border-gray-300 rounded-sm py-2 font-medium flex items-center justify-center gap-2 hover:cursor-pointer hover:bg-gray-50 transition"
         >
           <Image
             src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
@@ -29,7 +50,7 @@ const AuthPage = () => {
             className="w-5 h-5"
             priority
           />
-          Login with Google
+          Continue with Google
         </button>
         <div className="max-w-[500px] text-center text-[12px]">
           <span className="">

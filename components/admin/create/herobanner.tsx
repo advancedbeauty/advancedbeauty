@@ -101,13 +101,25 @@ export default function HeroBannerManager() {
   const fetchBanners = async () => {
     const result = await getHeroBanners();
     if (result.success && result.data) {
-      const bannersWithStringDates = result.data.map((banner: any) => ({
-        ...banner,
-        createdAt: banner.createdAt.toISOString(),
-        updatedAt: banner.updatedAt.toISOString(),
-        imageFileId: banner.imageFileId || '',
-        mdImageFileId: banner.mdImageFileId || '',
-      }));
+      const bannersWithStringDates: HeroBanner[] = result.data.map(
+        (banner: {
+          id: string;
+          image: string;
+          mdImage: string;
+          link: string;
+          isPublished: boolean;
+          imageFileId?: string;
+          mdImageFileId?: string;
+          createdAt: Date;
+          updatedAt: Date;
+        }) => ({
+          ...banner,
+          createdAt: banner.createdAt.toISOString(),
+          updatedAt: banner.updatedAt.toISOString(),
+          imageFileId: banner.imageFileId || '',
+          mdImageFileId: banner.mdImageFileId || '',
+        })
+      );
       setBanners(bannersWithStringDates);
     } else {
       toast.error(result.error);

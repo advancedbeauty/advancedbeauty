@@ -1,6 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, ChangeEvent } from 'react';
+import Image from 'next/image';
+import { PlusCircle, Loader2, Pencil, Trash } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,7 +28,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Loader2, Pencil, Trash } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   createService,
@@ -36,6 +37,10 @@ import {
 } from '@/actions/service.action';
 import parseDetails, { ServiceDetails } from '@/helper/servicedeatils';
 import data from '@/lib/data';
+import {
+  uploadImageToDrive,
+  deleteImageFromDrive,
+} from '@/actions/driveupload.action';
 
 interface Service {
   id: string;
@@ -44,7 +49,7 @@ interface Service {
   description: string;
   price: number;
   listPrice: number;
-  images: string[];
+  images: string[]; // Array of uploaded image URLs.
   tags: string[];
   isPublished: boolean;
   details: ServiceDetails;
@@ -55,25 +60,41 @@ interface Detail {
   lines: string[];
 }
 
+// Updated form state now stores image arrays and file ID arrays.
+interface FormDataState {
+  name: string;
+  category: string;
+  description: string;
+  price: string;
+  listPrice: string;
+  images: string[]; // Uploaded image URLs.
+  imageFileIds: string[]; // Google Drive file IDs for each image.
+  tags: string;
+  isPublished: boolean;
+}
+
 export default function ServiceItem() {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingService, setEditingService] = useState<Service | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormDataState>({
     name: '',
     category: '',
     description: '',
     price: '',
     listPrice: '',
-    images: '',
+    images: [],
+    imageFileIds: [],
     tags: '',
     isPublished: false,
   });
-
-  // details state stores an array of detail sections
+  // details state stores an array of detail sections.
   const [details, setDetails] = useState<Detail[]>([
     { heading: '', lines: [''] },
   ]);
+
+  // Ref for the hidden file input for images.
+  const imageInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     fetchServices();
@@ -82,33 +103,78 @@ export default function ServiceItem() {
   const fetchServices = async () => {
     const result = await getServices();
     if (result.success && result.data) {
-      const services = result.data.map((service) => ({
+      const servicesData = result.data.map((service: any) => ({
         ...service,
         description: service.description || '',
         details: parseDetails(service.details),
       }));
-      setServices(services);
+      setServices(servicesData);
     } else {
       toast.error(result.error);
     }
     setLoading(false);
   };
 
+  // --- Image Upload UI & Logic ---
+
+  // When user selects a file, upload it to Google Drive.
+  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const uploadToastId = toast.loading('Uploading image...');
+    const uploadResult = await uploadImageToDrive(file);
+    if (uploadResult.success) {
+      // If there's already an image uploaded that you want to replace,
+      // you can optionally delete it. Here we simply add the new image.
+      setFormData((prev) => ({
+        ...prev,
+        images: [...prev.images, uploadResult.url || ''],
+        imageFileIds: [...prev.imageFileIds, uploadResult.fileId || ''],
+      }));
+      toast.success('Image uploaded!', { id: uploadToastId });
+    } else {
+      toast.error(uploadResult.error || 'Failed to upload image', {
+        id: uploadToastId,
+      });
+    }
+    // Clear the file input so that the same file can be selected again if needed.
+    if (imageInputRef.current) imageInputRef.current.value = '';
+  };
+
+  // Remove an image from the list and delete it from Drive.
+  const removeImage = async (index: number) => {
+    const fileId = formData.imageFileIds[index];
+    if (fileId) {
+      await deleteImageFromDrive(fileId);
+    }
+    setFormData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+      imageFileIds: prev.imageFileIds.filter((_, i) => i !== index),
+    }));
+  };
+
+  // --- Form Submission ---
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
     const form = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
-      form.append(key, value.toString());
+      // For images, join array into a comma-separated string.
+      if (key === 'images') {
+        form.append(key, value.join(','));
+      } else if (key === 'imageFileIds') {
+        form.append(key, value.join(','));
+      } else {
+        form.append(key, value.toString());
+      }
     });
-    // Append details as a JSON string
+    // Append details as a JSON string.
     form.append('details', JSON.stringify(details));
-
     const result = editingService
       ? await updateService(editingService.id, form)
       : await createService(form);
-
     if (result.success) {
       toast.success(editingService ? 'Service updated' : 'Service created');
       resetForm();
@@ -124,6 +190,7 @@ export default function ServiceItem() {
     const result = await deleteService(id);
     if (result.success) {
       toast.success('Service deleted');
+      // Optionally, you could delete associated images from Drive if your backend doesn't handle that.
       fetchServices();
     } else {
       toast.error(result.error);
@@ -138,15 +205,60 @@ export default function ServiceItem() {
       description: '',
       price: '',
       listPrice: '',
-      images: '',
+      images: [],
+      imageFileIds: [],
       tags: '',
       isPublished: false,
     });
     setEditingService(null);
     setDetails([{ heading: '', lines: [''] }]);
+    if (imageInputRef.current) imageInputRef.current.value = '';
   };
 
-  // ----- Detail Section Handlers -----
+  // --- Reusable Image Upload Gallery Component ---
+
+  const ImageUploadGallery = () => {
+    return (
+      <div className="space-y-2">
+        <Label>Service Images</Label>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {formData.images.map((url, index) => (
+            <div key={index} className="relative w-full h-32 border border-dashed rounded-md overflow-hidden">
+              <Image
+                src={url}
+                alt={`Service Image ${index + 1}`}
+                fill
+                className="object-cover"
+              />
+              <button
+                type="button"
+                onClick={() => removeImage(index)}
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
+              >
+                <Trash size={16} />
+              </button>
+            </div>
+          ))}
+          <label
+            htmlFor="serviceImageUpload"
+            className="relative w-full h-32 border border-dashed rounded-md flex items-center justify-center cursor-pointer hover:border-gray-400"
+          >
+            <input
+              id="serviceImageUpload"
+              type="file"
+              accept="image/*"
+              className="absolute inset-0 opacity-0 cursor-pointer"
+              onChange={handleImageUpload}
+              ref={imageInputRef}
+            />
+            <PlusCircle className="text-gray-400" size={40} />
+          </label>
+        </div>
+      </div>
+    );
+  };
+
+  // --- Detail Section Handlers ---
 
   const addDetailSection = () => {
     setDetails([...details, { heading: '', lines: [''] }]);
@@ -276,29 +388,19 @@ export default function ServiceItem() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="images">Images</Label>
-                <Input
-                  id="images"
-                  placeholder="Comma separated URLs"
-                  value={formData.images}
-                  onChange={(e) =>
-                    setFormData({ ...formData, images: e.target.value })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="tags">Tags</Label>
-                <Input
-                  id="tags"
-                  placeholder="Comma separated tags"
-                  value={formData.tags}
-                  onChange={(e) =>
-                    setFormData({ ...formData, tags: e.target.value })
-                  }
-                />
-              </div>
+            {/* Image Upload Gallery */}
+            <ImageUploadGallery />
+
+            <div className="space-y-2">
+              <Label htmlFor="tags">Tags</Label>
+              <Input
+                id="tags"
+                placeholder="Comma separated tags"
+                value={formData.tags}
+                onChange={(e) =>
+                  setFormData({ ...formData, tags: e.target.value })
+                }
+              />
             </div>
 
             {/* Details Section */}
@@ -380,7 +482,6 @@ export default function ServiceItem() {
               </Button>
             </div>
 
-            {/* Published Toggle */}
             <div className="flex items-center space-x-3">
               <Switch
                 checked={formData.isPublished}
@@ -391,7 +492,6 @@ export default function ServiceItem() {
               <Label>Published</Label>
             </div>
 
-            {/* Form Actions */}
             <div className="flex items-center space-x-4">
               <Button type="submit" disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -407,7 +507,7 @@ export default function ServiceItem() {
         </CardContent>
       </Card>
 
-      {/* Service List Card */}
+      {/* Services List Card */}
       <Card className="shadow-lg">
         <CardHeader className="border-b pb-4">
           <CardTitle className="text-2xl font-bold">Services</CardTitle>
@@ -450,19 +550,17 @@ export default function ServiceItem() {
                             description: service.description,
                             price: service.price.toString(),
                             listPrice: service.listPrice.toString(),
-                            images: service.images.join(','),
+                            // Assume the first image is the primary one.
+                            images: service.images,
+                            imageFileIds: [], // Not pre-filled on edit.
                             tags: service.tags.join(','),
                             isPublished: service.isPublished,
                           });
                           const parsedDetails =
                             typeof service.details === 'string' &&
                             service.details
-                              ? JSON.parse(service.details) || [
-                                  { heading: '', lines: [''] },
-                                ]
-                              : service.details || [
-                                  { heading: '', lines: [''] },
-                                ];
+                              ? JSON.parse(service.details) || [{ heading: '', lines: [''] }]
+                              : service.details || [{ heading: '', lines: [''] }];
                           setDetails(parsedDetails);
                         }}
                       >
@@ -478,15 +576,12 @@ export default function ServiceItem() {
                           <AlertDialogHeader>
                             <AlertDialogTitle>Delete Service</AlertDialogTitle>
                             <AlertDialogDescription>
-                              Are you sure you want to delete this service? This
-                              action cannot be undone.
+                              Are you sure you want to delete this service? This action cannot be undone.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleDelete(service.id)}
-                            >
+                            <AlertDialogAction onClick={() => handleDelete(service.id)}>
                               Delete
                             </AlertDialogAction>
                           </AlertDialogFooter>

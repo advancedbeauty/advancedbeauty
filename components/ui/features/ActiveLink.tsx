@@ -1,8 +1,9 @@
 'use client';
 
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React from 'react';
+import NextLink from '@/components/ui/features/NextLink';
 
 interface ActiveLinkProps {
   href: string;
@@ -14,12 +15,13 @@ const ActiveLink: React.FC<ActiveLinkProps> = ({ href, text }) => {
   const isActive = pathname === href;
 
   return (
-    <Link
+    <NextLink
       href={href}
       className={isActive ? 'text-[#D9C1A3]' : 'hover:text-[#D9C1A3]'}
     >
       {text}
-    </Link>
+      
+    </NextLink>
   );
 };
 

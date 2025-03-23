@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, ChangeEvent } from 'react';
 import Image from 'next/image';
-import { PlusCircle, Loader2, Pencil, Trash } from 'lucide-react';
+import { PlusCircle, Loader2, Pencil, Trash, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,6 +28,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import {
   createService,
@@ -41,7 +49,52 @@ import {
   uploadImageToDrive,
   deleteImageFromDrive,
 } from '@/actions/driveupload.action';
+import { JsonValue } from '@prisma/client/runtime/library';
 
+// Define tags data structure
+interface Tag {
+  id: string;
+  name: string;
+}
+
+// Sample tags data
+const tagsData: Tag[] = [
+  { id: '1', name: 'Premium' },
+  { id: '2', name: 'Budget' },
+  { id: '3', name: 'Popular' },
+  { id: '4', name: 'New' },
+  { id: '5', name: 'Trending' },
+  { id: '6', name: 'Limited' },
+  { id: '7', name: 'Essential' },
+  { id: '8', name: 'Luxury' },
+  { id: '9', name: 'Best Seller' },
+  { id: '10', name: 'Featured' },
+];
+
+// Define the structure of what Prisma returns
+interface PrismaService {
+  id: string;
+  name: string;
+  slug: string;
+  category: string;
+  description: string | null;
+  price: number;
+  listPrice: number;
+  images: string[];
+  tags: string[];
+  isPublished: boolean;
+  details: JsonValue;
+  createdAt: Date;
+  updatedAt: Date;
+  orderItems?: [];
+}
+
+interface Detail {
+  heading: string;
+  lines: string[];
+}
+
+// Our component's service interface
 interface Service {
   id: string;
   name: string;
@@ -49,15 +102,13 @@ interface Service {
   description: string;
   price: number;
   listPrice: number;
-  images: string[]; // Array of uploaded image URLs.
+  images: string[];
   tags: string[];
   isPublished: boolean;
   details: ServiceDetails;
-}
-
-interface Detail {
-  heading: string;
-  lines: string[];
+  createdAt?: Date;
+  updatedAt?: Date;
+  slug?: string;
 }
 
 // Updated form state now stores image arrays and file ID arrays.
@@ -69,8 +120,22 @@ interface FormDataState {
   listPrice: string;
   images: string[]; // Uploaded image URLs.
   imageFileIds: string[]; // Google Drive file IDs for each image.
-  tags: string;
+  tags: string[]; // Now an array of selected tag names
   isPublished: boolean;
+}
+
+// Interface for API responses
+interface ServiceActionResult {
+  success: boolean;
+  data?: PrismaService[] | PrismaService;
+  error?: string;
+}
+
+interface UploadResult {
+  success: boolean;
+  url?: string;
+  fileId?: string;
+  error?: string;
 }
 
 export default function ServiceItem() {
@@ -85,7 +150,7 @@ export default function ServiceItem() {
     listPrice: '',
     images: [],
     imageFileIds: [],
-    tags: '',
+    tags: [],
     isPublished: false,
   });
   // details state stores an array of detail sections.
@@ -101,18 +166,36 @@ export default function ServiceItem() {
   }, []);
 
   const fetchServices = async () => {
-    const result = await getServices();
+    const result = (await getServices()) as ServiceActionResult;
     if (result.success && result.data) {
-      const servicesData = result.data.map((service: any) => ({
+      const data = Array.isArray(result.data) ? result.data : [result.data];
+      const servicesData = data.map((service: PrismaService) => ({
         ...service,
         description: service.description || '',
         details: parseDetails(service.details),
-      }));
+      })) as Service[];
       setServices(servicesData);
     } else {
-      toast.error(result.error);
+      toast.error(result.error || 'Failed to fetch services');
     }
     setLoading(false);
+  };
+
+  // --- Tags Handling ---
+  const handleTagSelect = (tag: string) => {
+    if (!formData.tags.includes(tag)) {
+      setFormData((prev) => ({
+        ...prev,
+        tags: [...prev.tags, tag],
+      }));
+    }
+  };
+
+  const removeTag = (tag: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((t) => t !== tag),
+    }));
   };
 
   // --- Image Upload UI & Logic ---
@@ -122,7 +205,7 @@ export default function ServiceItem() {
     const file = e.target.files?.[0];
     if (!file) return;
     const uploadToastId = toast.loading('Uploading image...');
-    const uploadResult = await uploadImageToDrive(file);
+    const uploadResult = (await uploadImageToDrive(file)) as UploadResult;
     if (uploadResult.success) {
       // If there's already an image uploaded that you want to replace,
       // you can optionally delete it. Here we simply add the new image.
@@ -160,40 +243,48 @@ export default function ServiceItem() {
     e.preventDefault();
     setLoading(true);
     const form = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      // For images, join array into a comma-separated string.
-      if (key === 'images') {
-        form.append(key, value.join(','));
-      } else if (key === 'imageFileIds') {
-        form.append(key, value.join(','));
-      } else {
-        form.append(key, value.toString());
-      }
-    });
-    // Append details as a JSON string.
+
+    // Append basic form data
+    form.append('name', formData.name);
+    form.append('category', formData.category);
+    form.append('description', formData.description);
+    form.append('price', formData.price);
+    form.append('listPrice', formData.listPrice);
+    form.append('isPublished', String(formData.isPublished));
+
+    // Append images as a comma-separated string
+    form.append('images', formData.images.join(','));
+    form.append('imageFileIds', formData.imageFileIds.join(','));
+
+    // Append tags as a comma-separated string
+    form.append('tags', formData.tags.join(','));
+
+    // Append details as a JSON string
     form.append('details', JSON.stringify(details));
+
     const result = editingService
-      ? await updateService(editingService.id, form)
-      : await createService(form);
+      ? ((await updateService(editingService.id, form)) as ServiceActionResult)
+      : ((await createService(form)) as ServiceActionResult);
+
     if (result.success) {
       toast.success(editingService ? 'Service updated' : 'Service created');
       resetForm();
       fetchServices();
     } else {
-      toast.error(result.error);
+      toast.error(result.error || 'Operation failed');
     }
     setLoading(false);
   };
 
   const handleDelete = async (id: string) => {
     setLoading(true);
-    const result = await deleteService(id);
+    const result = (await deleteService(id)) as ServiceActionResult;
     if (result.success) {
       toast.success('Service deleted');
       // Optionally, you could delete associated images from Drive if your backend doesn't handle that.
       fetchServices();
     } else {
-      toast.error(result.error);
+      toast.error(result.error || 'Failed to delete service');
     }
     setLoading(false);
   };
@@ -207,7 +298,7 @@ export default function ServiceItem() {
       listPrice: '',
       images: [],
       imageFileIds: [],
-      tags: '',
+      tags: [],
       isPublished: false,
     });
     setEditingService(null);
@@ -223,7 +314,10 @@ export default function ServiceItem() {
         <Label>Service Images</Label>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {formData.images.map((url, index) => (
-            <div key={index} className="relative w-full h-32 border border-dashed rounded-md overflow-hidden">
+            <div
+              key={index}
+              className="relative w-full h-32 border border-dashed rounded-md overflow-hidden"
+            >
               <Image
                 src={url}
                 alt={`Service Image ${index + 1}`}
@@ -326,24 +420,23 @@ export default function ServiceItem() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="category">Category</Label>
-                <select
-                  id="category"
+                <Select
                   value={formData.category}
-                  onChange={(e) =>
-                    setFormData({ ...formData, category: e.target.value })
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, category: value })
                   }
-                  required
-                  className="input"
                 >
-                  <option value="" disabled>
-                    Select Category
-                  </option>
-                  {data.ServiceCategoryData.map((cat) => (
-                    <option key={cat.id} value={cat.title}>
-                      {cat.title}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {data.ServiceCategoryData.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.title}>
+                        {cat.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
@@ -391,16 +484,42 @@ export default function ServiceItem() {
             {/* Image Upload Gallery */}
             <ImageUploadGallery />
 
+            {/* Tags Select Field */}
             <div className="space-y-2">
-              <Label htmlFor="tags">Tags</Label>
-              <Input
-                id="tags"
-                placeholder="Comma separated tags"
-                value={formData.tags}
-                onChange={(e) =>
-                  setFormData({ ...formData, tags: e.target.value })
-                }
-              />
+              <Label>Tags</Label>
+              <div className="space-y-4">
+                <Select onValueChange={handleTagSelect}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select tags" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {tagsData.map((tag) => (
+                      <SelectItem key={tag.id} value={tag.name}>
+                        {tag.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <div className="flex flex-wrap gap-2">
+                  {formData.tags.map((tag) => (
+                    <Badge
+                      key={tag}
+                      variant="secondary"
+                      className="py-1 flex gap-1 items-center"
+                    >
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => removeTag(tag)}
+                        className="text-gray-500 hover:text-gray-700"
+                      >
+                        <X size={14} />
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
+              </div>
             </div>
 
             {/* Details Section */}
@@ -524,6 +643,7 @@ export default function ServiceItem() {
                   <TableHead>Name</TableHead>
                   <TableHead>Category</TableHead>
                   <TableHead>Price</TableHead>
+                  <TableHead>Tags</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
@@ -534,6 +654,19 @@ export default function ServiceItem() {
                     <TableCell>{service.name}</TableCell>
                     <TableCell>{service.category}</TableCell>
                     <TableCell>₹{service.price}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {service.tags.map((tag) => (
+                          <Badge
+                            key={tag}
+                            variant="outline"
+                            className="text-xs"
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </TableCell>
                     <TableCell>
                       {service.isPublished ? 'Published' : 'Draft'}
                     </TableCell>
@@ -547,21 +680,24 @@ export default function ServiceItem() {
                           setFormData({
                             name: service.name,
                             category: service.category,
-                            description: service.description,
+                            description: service.description || '',
                             price: service.price.toString(),
                             listPrice: service.listPrice.toString(),
-                            // Assume the first image is the primary one.
                             images: service.images,
                             imageFileIds: [], // Not pre-filled on edit.
-                            tags: service.tags.join(','),
+                            tags: service.tags,
                             isPublished: service.isPublished,
                           });
                           const parsedDetails =
                             typeof service.details === 'string' &&
                             service.details
-                              ? JSON.parse(service.details) || [{ heading: '', lines: [''] }]
-                              : service.details || [{ heading: '', lines: [''] }];
-                          setDetails(parsedDetails);
+                              ? JSON.parse(service.details) || [
+                                  { heading: '', lines: [''] },
+                                ]
+                              : service.details || [
+                                  { heading: '', lines: [''] },
+                                ];
+                          setDetails(parsedDetails as Detail[]);
                         }}
                       >
                         <Pencil className="h-4 w-4" />
@@ -576,12 +712,15 @@ export default function ServiceItem() {
                           <AlertDialogHeader>
                             <AlertDialogTitle>Delete Service</AlertDialogTitle>
                             <AlertDialogDescription>
-                              Are you sure you want to delete this service? This action cannot be undone.
+                              Are you sure you want to delete this service? This
+                              action cannot be undone.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDelete(service.id)}>
+                            <AlertDialogAction
+                              onClick={() => handleDelete(service.id)}
+                            >
                               Delete
                             </AlertDialogAction>
                           </AlertDialogFooter>

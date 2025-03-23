@@ -93,7 +93,7 @@ export async function getTrendingServices() {
     const services = await prisma.service.findMany({
       where: {
         tags: {
-          has: 'trending',
+          hasSome: ['trending', 'Trending'],
         },
       },
       orderBy: { createdAt: 'desc' },

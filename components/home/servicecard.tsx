@@ -20,8 +20,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   listingPrice,
   category,
 }) => {
-  const discountPercentage =
-    Math.round((listingPrice - price) / listingPrice) * 100;
+  const discountPercentage = Math.round(((price - listingPrice) / price) * 100);
   return (
     <div className="w-full">
       <div className="relative overflow-hidden h-[230px] shadow-md">
@@ -38,7 +37,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
             </div>
           </Link>
         </div>
-        {discountPercentage > 0 && (
+        {discountPercentage && (
           <div className="absolute top-2 left-2 bg-yellow-100 text-black text-sm font-semibold rounded w-fit h-8 flex items-center justify-center shadow-lg z-10 px-2">
             {discountPercentage}% OFF
           </div>
@@ -58,13 +57,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           {title}
         </Link>
         <div className="flex gap-5">
-          {discountPercentage > 0 && (
+          {price && (
             <s className="text-neutral-400">
               <span className="uppercase font-semibold text-lg">₹{price}</span>
             </s>
           )}
           <span className="uppercase font-semibold text-lg text-red-700">
-            ₹{price}
+            ₹{listingPrice}
           </span>
         </div>
       </div>

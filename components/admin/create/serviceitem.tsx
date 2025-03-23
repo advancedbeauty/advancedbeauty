@@ -58,18 +58,7 @@ interface Tag {
 }
 
 // Sample tags data
-const tagsData: Tag[] = [
-  { id: '1', name: 'Premium' },
-  { id: '2', name: 'Budget' },
-  { id: '3', name: 'Popular' },
-  { id: '4', name: 'New' },
-  { id: '5', name: 'Trending' },
-  { id: '6', name: 'Limited' },
-  { id: '7', name: 'Essential' },
-  { id: '8', name: 'Luxury' },
-  { id: '9', name: 'Best Seller' },
-  { id: '10', name: 'Featured' },
-];
+const tagsData: Tag[] = data.ServiceTagsData;
 
 // Define the structure of what Prisma returns
 interface PrismaService {

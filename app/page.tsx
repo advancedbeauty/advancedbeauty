@@ -14,6 +14,7 @@ import InstagramHighlight from '@/components/home/instagramhighlight';
 import ServiceCategory from '@/components/home/servicecategory';
 import TrendingServices from '@/components/home/trendingservices';
 import Aboutsection from '@/components/home/about';
+import FloatingActions from '@/components/ui/features/Floatingactions';
 
 const page = () => {
   return (
@@ -28,6 +29,7 @@ const page = () => {
       <Certificatesection />
       <Faqsection />
       <SubscribeNewsletter />
+      <FloatingActions />
       <FooterBar />
       <Footer />
     </NavbarMarginLayout>

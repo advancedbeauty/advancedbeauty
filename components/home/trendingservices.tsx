@@ -122,12 +122,16 @@ const TrendingServices = () => {
   // Mouse event handlers
   const handleMouseEnter = React.useCallback(() => {
     setIsPlaying(false);
-    autoplayPlugin.current.stop();
+    if (autoplayPlugin.current) {
+      autoplayPlugin.current.stop();
+    }
   }, []);
 
   const handleMouseLeave = React.useCallback(() => {
     setIsPlaying(true);
-    autoplayPlugin.current.play();
+    if (autoplayPlugin.current) {
+      autoplayPlugin.current.play();
+    }
   }, []);
 
   useEffect(() => {
@@ -193,7 +197,7 @@ const TrendingServices = () => {
                       className="pl-4 basis-full sm:basis-1/2 lg:basis-1/4 md:basis-1/3 xl:basis-1/5"
                     >
                       <ServiceCard
-                        src={service.images[0]}
+                        src={service.images?.[0] || '/logo/logo.png'}
                         title={service.name}
                         price={service.price}
                         listingPrice={service.listPrice}

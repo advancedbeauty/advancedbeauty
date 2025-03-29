@@ -76,12 +76,25 @@ export async function deleteService(id: string) {
   }
 }
 
-export async function getServices() {
+export async function getServices(category?: string) {
   try {
-    const services = await prisma.service.findMany({
-      orderBy: { createdAt: 'desc' },
-    });
-    return { success: true, data: services };
+    if (category) {
+      const services = await prisma.service.findMany({
+        where: {
+          category: {
+            equals: category,
+            mode: 'insensitive',
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      });
+      return { success: true, data: services };
+    } else {
+      const services = await prisma.service.findMany({
+        orderBy: { createdAt: 'desc' },
+      });
+      return { success: true, data: services };
+    }
   } catch (error) {
     console.error('Get services error:', error);
     return { success: false, error: 'Failed to fetch services' };

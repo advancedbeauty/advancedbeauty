@@ -144,7 +144,7 @@ const data = {
     },
     {
       id: 4,
-      title: 'nail extension & art',
+      title: 'nail extension and art',
       get url() {
         return `/services/${toSlug(this.title)}`;
       },

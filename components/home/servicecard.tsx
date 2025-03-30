@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { toSlug } from '@/lib/utils';
 // import HeartButton from '@/components/wishlist/heart-btn';
 
 interface ServiceCardProps {
@@ -25,7 +26,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
     <div className="w-full">
       <div className="relative overflow-hidden h-[230px] shadow-md">
         <div className="w-full h-full">
-          <Link href={``} className="block w-full h-full">
+          <Link href={`/services/${toSlug(category)}/${toSlug(title)}`} className="block w-full h-full">
             <div className="w-full h-full relative">
               <Image
                 fill

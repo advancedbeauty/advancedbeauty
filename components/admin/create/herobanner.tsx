@@ -401,7 +401,7 @@ export default function HeroBannerManager() {
                         {banner.link}
                       </TableCell>
                       <TableCell className="whitespace-nowrap">
-                        {banner.isPublished ? 'Published' : 'Draft'}
+                        {banner.isPublished ? 'Published' : 'Not Published'}
                       </TableCell>
                       <TableCell className="text-right space-x-2">
                         <Button

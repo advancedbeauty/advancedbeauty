@@ -85,6 +85,7 @@ export async function getServices(category?: string) {
             equals: category,
             mode: 'insensitive',
           },
+          isPublished: true,
         },
         orderBy: { createdAt: 'desc' },
       });
@@ -108,6 +109,7 @@ export async function getTrendingServices() {
         tags: {
           hasSome: ['trending', 'Trending'],
         },
+        isPublished: true,
       },
       orderBy: { createdAt: 'desc' },
     });
@@ -115,5 +117,47 @@ export async function getTrendingServices() {
   } catch (error) {
     console.error('Get trending services error:', error);
     return { success: false, error: 'Failed to fetch trending services' };
+  }
+}
+
+export async function getServiceBySlug(slug: string) {
+  try {
+    const service = await prisma.service.findUnique({
+      where: { slug },
+    });
+
+    if (!service) {
+      throw new Error('Service not found');
+    }
+
+    return service;
+  } catch (error) {
+    console.error('Error fetching service by slug:', error);
+    throw error;
+  }
+}
+
+export async function checkServiceExists(name: string) {
+  try {
+    const existingService = await prisma.service.findFirst({
+      where: {
+        slug: {
+          equals: name.toLowerCase().replace(/\s+/g, '-'),
+          mode: 'insensitive', // Case-insensitive comparison
+        },
+      },
+    });
+    
+    return {
+      success: true,
+      exists: !!existingService,
+    };
+  } catch (error) {
+    console.error('Error checking service name:', error);
+    return {
+      success: false,
+      exists: false,
+      error: 'Failed to check service name',
+    };
   }
 }

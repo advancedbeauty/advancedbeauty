@@ -42,6 +42,7 @@ import {
   updateService,
   deleteService,
   getServices,
+  checkServiceExists,
 } from '@/actions/service.action';
 import parseDetails, { ServiceDetails } from '@/helper/servicedeatils';
 import data from '@/lib/data';
@@ -150,6 +151,9 @@ export default function ServiceItem() {
   // Ref for the hidden file input for images.
   const imageInputRef = useRef<HTMLInputElement | null>(null);
 
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [isCheckingName, setIsCheckingName] = useState(false);
+
   useEffect(() => {
     fetchServices();
   }, []);
@@ -168,6 +172,49 @@ export default function ServiceItem() {
       toast.error(result.error || 'Failed to fetch services');
     }
     setLoading(false);
+  };
+
+  const checkNameExists = async (name: string) => {
+    // Skip check if we're editing and the name hasn't changed
+    if (editingService && editingService.name === name) {
+      setNameError(null);
+      return false;
+    }
+
+    setIsCheckingName(true);
+    try {
+      const result = await checkServiceExists(name);
+      if (result.exists) {
+        setNameError('A service with this name already exists');
+        return true;
+      } else {
+        setNameError(null);
+        return false;
+      }
+    } catch (error) {
+      console.error('Error checking name:', error);
+      setNameError('Failed to check name availability');
+      return true; // Prevent submission if check fails
+    } finally {
+      setIsCheckingName(false);
+    }
+  };
+
+  const handleNameChange = (name: string) => {
+    setFormData({ ...formData, name });
+
+    // Clear previous error when user types
+    if (nameError) setNameError(null);
+
+    // Implement debounce to avoid too many API calls
+    if (name.trim().length > 2) {
+      // Only check if name is at least 3 chars
+      const timer = setTimeout(() => {
+        checkNameExists(name);
+      }, 800); // Wait 500ms after typing stops
+
+      return () => clearTimeout(timer);
+    }
   };
 
   // --- Tags Handling ---
@@ -401,11 +448,19 @@ export default function ServiceItem() {
                   id="name"
                   placeholder="Enter service name"
                   value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
+                  onChange={(e) => handleNameChange(e.target.value)}
+                  className={nameError ? 'border-red-500' : ''}
                   required
                 />
+                {isCheckingName && (
+                  <p className="text-sm text-gray-500 flex items-center mt-1">
+                    <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                    Checking name availability...
+                  </p>
+                )}
+                {nameError && (
+                  <p className="text-sm text-red-500 mt-1">{nameError}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="category">Category</Label>
@@ -657,7 +712,7 @@ export default function ServiceItem() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      {service.isPublished ? 'Published' : 'Draft'}
+                      {service.isPublished ? 'Published' : 'Not Published'}
                     </TableCell>
                     <TableCell className="text-right space-x-2">
                       <Button

@@ -1,23 +1,6 @@
 import { toSlug } from './utils';
 
 const data = {
-  herosection_carousels: [
-    {
-      url: '/search?category=bridal-makeup',
-      image: '/images/herosection/banner1.jpg',
-      isPublished: true,
-    },
-    {
-      url: '/search?category=nail-extension',
-      image: '/images/herosection/banner2.jpg',
-      isPublished: true,
-    },
-    {
-      url: '/search?category=mani-pedi',
-      image: '/images/herosection/banner3.jpg',
-      isPublished: true,
-    },
-  ],
   HomeAwardsData: [
     {
       src: '/images/awardsection/awards1.png',

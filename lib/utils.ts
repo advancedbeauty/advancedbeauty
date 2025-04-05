@@ -24,3 +24,18 @@ export const slugToTitle = (slug: string): string =>
     .split('-')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+
+export const formatPrice = (price: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'INR',
+  }).format(price);
+};
+
+export const formatUrlString = (title: string) => {
+  return title
+      .toLowerCase()
+      .replace(/&/g, 'and')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+};

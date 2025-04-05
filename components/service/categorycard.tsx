@@ -154,7 +154,7 @@ const Categorycard: React.FC = () => {
     };
 
     fetchServices();
-  }, []);
+  }, [category]);
 
   const skeletonItems = Array(5)
     .fill(0)

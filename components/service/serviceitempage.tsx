@@ -89,6 +89,17 @@ interface Service {
   details?: ServiceDetails; // Optional extra service details
 }
 
+export interface LocalCartItem {
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+  listPrice: number;
+  date: string; // ISO string for date
+  time: string;
+  image: string;
+}
+
 const Serviceitempage: React.FC = () => {
   const pathname = usePathname();
   const [selectedDate, setSelectedDate] = useState<Date>();
@@ -103,7 +114,7 @@ const Serviceitempage: React.FC = () => {
   useEffect(() => {
     if (service) {
       const existingCart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
-      const found = existingCart.some((item: any) => item.id === service.id);
+      const found = existingCart.some((item: LocalCartItem) => item.id === service.id);
       setInCart(found);
     }
   }, [service]);
@@ -170,7 +181,7 @@ const Serviceitempage: React.FC = () => {
     };
     const existingCart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
     const isAlreadyInCart = existingCart.some(
-      (item: any) => item.id === service.id,
+      (item: LocalCartItem) => item.id === service.id,
     );
     if (!isAlreadyInCart) {
       const updatedCart = [...existingCart, newCartItem];
@@ -186,7 +197,7 @@ const Serviceitempage: React.FC = () => {
     if (!service) return;
     const existingCart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
     const updatedCart = existingCart.filter(
-      (item: any) => item.id !== service.id,
+      (item: LocalCartItem) => item.id !== service.id,
     );
     localStorage.setItem(CART_KEY, JSON.stringify(updatedCart));
     setInCart(false);
@@ -194,10 +205,10 @@ const Serviceitempage: React.FC = () => {
   };
 
   // Parse service details and cast to ServiceDetails
-  const detailsParsed =
-    service && service.details
-      ? (parseDetails(service.details) as ServiceDetails)
-      : null;
+  // const detailsParsed =
+  //   service && service.details
+  //     ? (parseDetails(service.details) as ServiceDetails)
+  //     : null;
 
   const orderData = {
     category: service?.category,

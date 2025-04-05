@@ -5,8 +5,6 @@ import FooterBar from '@/components/shared/footer/footer-bar';
 import SubscribeNewsletter from '@/components/shared/subscribe-newsletter';
 import NavbarMarginLayout from '@/components/shared/navbar/navbar-margin-layout';
 import Herosection from '@/components/home/hero';
-
-import data from '@/lib/data';
 import Certificatesection from '@/components/home/certificate';
 import Awardsection from '@/components/home/award';
 import Testimonialsection from '@/components/home/testimonial';

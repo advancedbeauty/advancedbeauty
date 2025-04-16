@@ -341,7 +341,7 @@ const CartPage: React.FC = () => {
                       <span>₹{priceDetails.total.toLocaleString()}</span>
                     </div>
                   </div>
-                  <Link href="/checkout">
+                  <Link href="/checkout?type=cart">
                     <Button className="cursor-pointer w-full bg-[#D9C1A3] hover:bg-[#c4ac8e] text-neutral-950 py-2 px-4 rounded font-medium mb-3">
                       Proceed to checkout
                     </Button>

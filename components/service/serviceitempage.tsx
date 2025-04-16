@@ -32,6 +32,7 @@ import { toast } from 'sonner';
 import parseDetails, { ServiceDetails } from '@/helper/servicedeatils'; // adjust path as needed
 
 const CART_KEY = 'ab_service__cart__';
+const BUY_NOW_KEY = 'ab_service__buy_now__';
 
 const isDateDisabled = (date: Date) => {
   const today = new Date();
@@ -114,7 +115,9 @@ const Serviceitempage: React.FC = () => {
   useEffect(() => {
     if (service) {
       const existingCart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
-      const found = existingCart.some((item: LocalCartItem) => item.id === service.id);
+      const found = existingCart.some(
+        (item: LocalCartItem) => item.id === service.id,
+      );
       setInCart(found);
     }
   }, [service]);
@@ -210,16 +213,29 @@ const Serviceitempage: React.FC = () => {
   //     ? (parseDetails(service.details) as ServiceDetails)
   //     : null;
 
-  const orderData = {
-    category: service?.category,
-    name: service?.name,
-    date: selectedDate,
-    time: selectedTime,
-  };
+  const checkoutHref = `/checkout?type=booknow`;
 
-  const checkoutHref = `/checkout?item=${encodeURIComponent(
-    JSON.stringify(orderData),
-  )}`;
+  const handleBookNow = () => {
+    if (!service || !selectedDate || !selectedTime) {
+      toast.error(
+        'Please select a date and time before proceeding to checkout.',
+      );
+      return;
+    }
+    const newCartItem = {
+      id: service.id,
+      name: service.name,
+      category: service.category,
+      price: service.price,
+      listPrice: service.listPrice,
+      date: selectedDate,
+      time: selectedTime,
+      image: service.images[0] || '/logo/logo.png',
+    };
+    localStorage.removeItem(BUY_NOW_KEY);
+    localStorage.setItem(BUY_NOW_KEY, JSON.stringify([newCartItem]));
+    toast.success('Proceeding to checkout!');
+  };
 
   if (loading) {
     return (
@@ -410,6 +426,7 @@ const Serviceitempage: React.FC = () => {
 
             <div className="flex gap-4 pt-6">
               <Button
+                onClick={handleBookNow}
                 className="p-0 m-0 flex-1 bg-primary text-white hover:bg-primary-dark focus:ring-2 focus:ring-primary focus:outline-none cursor-pointer"
                 disabled={!selectedDate || !selectedTime}
               >

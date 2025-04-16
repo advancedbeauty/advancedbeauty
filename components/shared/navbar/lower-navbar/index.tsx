@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useSession } from 'next-auth/react';
 import Logo from '@/components/ui/features/Logo';
 import Section from '@/components/ui/features/Section';
 import Menu from '@/components/shared/navbar/lower-navbar/menu';
@@ -14,6 +15,7 @@ import { BsHandbag, BsHandbagFill } from 'react-icons/bs';
 import { RiAccountCircleLine } from 'react-icons/ri';
 
 const LowerNavbar = () => {
+  const { data: session } = useSession();
   return (
     <Section className="py-2 shadow bg-[#111111] text-white">
       <Container className="w-full flex items-center justify-between gap-20">
@@ -31,11 +33,19 @@ const LowerNavbar = () => {
         </div>
         <div className="hidden lg:flex justify-end items-center gap-7 w-[250px]">
           <IconLink activeIcon={GoSearch} icon={GoSearch} href="/search" />
-          <IconLink
-            activeIcon={RiAccountCircleLine}
-            icon={RiAccountCircleLine}
-            href="/auth"
-          />
+          {session?.user ? (
+            <IconLink
+              activeIcon={RiAccountCircleLine}
+              icon={RiAccountCircleLine}
+              href="/profile/orders"
+            />
+          ) : (
+            <IconLink
+              activeIcon={RiAccountCircleLine}
+              icon={RiAccountCircleLine}
+              href="/auth"
+            />
+          )}
           <IconLink activeIcon={BsHandbagFill} icon={BsHandbag} href="/cart" />
         </div>
       </Container>

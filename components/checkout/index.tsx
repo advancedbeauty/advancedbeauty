@@ -6,7 +6,7 @@ import Container from '../ui/features/Container';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '../ui/button';
 import { format } from 'date-fns';
@@ -27,7 +27,6 @@ const CART_KEY = 'ab_service__cart__';
 const BUY_NOW_KEY = 'ab_service__buy_now__';
 
 const Checkout = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const checkoutType = searchParams.get('type');
 

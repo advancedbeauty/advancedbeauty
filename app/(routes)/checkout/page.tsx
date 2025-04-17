@@ -1,7 +1,12 @@
+import { Suspense } from 'react';
 import Checkout from '@/components/checkout';
 
 const page: React.FC = () => {
-  return <Checkout />;
+  return (
+    <Suspense>
+      <Checkout />
+    </Suspense>
+  );
 };
 
 export default page;

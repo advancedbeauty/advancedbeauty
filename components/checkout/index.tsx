@@ -339,7 +339,7 @@ const Checkout = () => {
                   {/* Place Order Button */}
                   <Button
                     type="submit"
-                    className="w-full bg-[#D9C1A3] hover:bg-[#c4ac8e] text-neutral-950 py-2 px-4 rounded font-medium"
+                    className="w-full bg-[#D9C1A3] hover:bg-[#c4ac8e] text-neutral-950 py-2 px-4 rounded font-medium cursor-pointer"
                     onClick={() =>
                       document.querySelector('form')?.requestSubmit()
                     }

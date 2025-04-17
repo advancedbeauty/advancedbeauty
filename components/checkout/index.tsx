@@ -10,6 +10,7 @@ import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '../ui/button';
 import { format } from 'date-fns';
+import { getAllOffers } from '@/actions/offer.action';
 
 interface CartItem {
   id: string;
@@ -23,6 +24,15 @@ interface CartItem {
   quantity?: number;
 }
 
+interface Offer {
+  id: string;
+  offerCode: string;
+  discountPercentage: number;
+  maxAmount: number;
+  image: string;
+  isPublished: boolean;
+}
+
 const CART_KEY = 'ab_service__cart__';
 const BUY_NOW_KEY = 'ab_service__buy_now__';
 
@@ -31,6 +41,13 @@ const Checkout = () => {
   const checkoutType = searchParams.get('type');
 
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [couponCode, setCouponCode] = useState('');
+  const [couponMessage, setCouponMessage] = useState<{
+    text: string;
+    type: 'success' | 'error' | '';
+  }>({ text: '', type: '' });
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
+  const [appliedOffer, setAppliedOffer] = useState<Offer | null>(null);
 
   // State to manage form inputs
   const [formData, setFormData] = useState({
@@ -68,6 +85,80 @@ const Checkout = () => {
     }
   }, [checkoutType]);
 
+  // Handle coupon code input change
+  const handleCouponChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCouponCode(e.target.value.toUpperCase());
+    // Clear any previous message when user types
+    if (couponMessage.text) {
+      setCouponMessage({ text: '', type: '' });
+    }
+  };
+
+  // Validate and apply coupon code using server action
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) {
+      setCouponMessage({
+        text: 'Please enter a coupon code',
+        type: 'error',
+      });
+      return;
+    }
+
+    try {
+      setIsApplyingCoupon(true);
+
+      // Find offers with matching code
+      // Note: This approach works if you have an index to search by offerCode
+      // If not, you'll need to adjust the API to support finding by code
+      const offersResponse = await getAllOffers();
+
+      if (offersResponse.success && offersResponse.data) {
+        // Find the matching offer by code
+        const matchingOffer = offersResponse.data.find(
+          (offer) => offer.offerCode === couponCode && offer.isPublished,
+        );
+
+        if (matchingOffer) {
+          setAppliedOffer(matchingOffer);
+          setCouponMessage({
+            text: `${matchingOffer.discountPercentage}% discount applied successfully!`,
+            type: 'success',
+          });
+        } else {
+          setCouponMessage({
+            text: 'Invalid or expired coupon code',
+            type: 'error',
+          });
+          setAppliedOffer(null);
+        }
+      } else {
+        setCouponMessage({
+          text: offersResponse.error || 'Error validating coupon',
+          type: 'error',
+        });
+        setAppliedOffer(null);
+      }
+    } catch (error) {
+      setCouponMessage({
+        text: 'Error validating coupon',
+        type: 'error',
+      });
+      setAppliedOffer(null);
+    } finally {
+      setIsApplyingCoupon(false);
+    }
+  };
+
+  // Remove applied coupon
+  const handleRemoveCoupon = () => {
+    setAppliedOffer(null);
+    setCouponCode('');
+    setCouponMessage({ text: 'Coupon removed', type: 'success' });
+    setTimeout(() => {
+      setCouponMessage({ text: '', type: '' });
+    }, 3000);
+  };
+
   // Compute price details from cart items
   const computePriceDetails = (items: CartItem[]) => {
     let subtotal = 0;
@@ -79,11 +170,37 @@ const Checkout = () => {
       totalDiscount += (item.price - item.listPrice) * qty;
     });
 
+    // Calculate the net amount after item discounts
+    const netAmount = subtotal - totalDiscount;
+
+    // Calculate coupon discount if any
+    let couponDiscount = 0;
+    if (appliedOffer) {
+      // Calculate discount based on percentage of net amount
+      const calculatedDiscount =
+        netAmount * (appliedOffer.discountPercentage / 100);
+
+      // Cap the discount at maxAmount from the offer
+      couponDiscount = Math.min(calculatedDiscount, appliedOffer.maxAmount);
+
+      // Also ensure the discount doesn't exceed the net amount
+      couponDiscount = Math.min(couponDiscount, netAmount);
+    }
+
     // Shipping is free if subtotal is ₹1000 or more; otherwise, ₹50.
     const shippingFee = subtotal >= 1000 ? 0 : 50;
-    const total = subtotal - totalDiscount + shippingFee;
+    const total = netAmount - couponDiscount + shippingFee;
 
-    return { subtotal, totalDiscount, shippingFee, total };
+    return {
+      subtotal,
+      totalDiscount,
+      couponDiscount,
+      shippingFee,
+      total,
+      // Include additional information for display
+      discountPercent: appliedOffer?.discountPercentage || 0,
+      maxDiscountAmount: appliedOffer?.maxAmount || 0,
+    };
   };
 
   // Handle form submission
@@ -97,12 +214,20 @@ const Checkout = () => {
       return;
     }
 
+    // Process order with or without coupon code
+    const orderData = {
+      ...formData,
+      items: cartItems,
+      offerId: appliedOffer?.id || null,
+      priceDetails: computePriceDetails(cartItems),
+    };
+
     // Process order
-    // const orderPlaced = await processOrder(formData);
+    // const orderPlaced = await processOrder(orderData);
 
     // if (orderPlaced) {
     // Redirect to order confirmation page
-    console.log('Order placed successfully!', formData);
+    console.log('Order placed successfully!', orderData);
     // router.push('/orders/order-confirmation');
     // }
   };
@@ -305,6 +430,57 @@ const Checkout = () => {
                     ))}
                   </div>
 
+                  {/* Coupon Code Section */}
+                  <div className="mt-4 border-t pt-4">
+                    <Label htmlFor="couponCode" className="text-sm font-medium">
+                      Apply Coupon Code
+                    </Label>
+                    <div className="flex gap-2 mt-2">
+                      <Input
+                        type="text"
+                        id="couponCode"
+                        placeholder="Enter coupon code"
+                        className="flex-1"
+                        value={couponCode}
+                        onChange={handleCouponChange}
+                        disabled={!!appliedOffer}
+                      />
+                      {!appliedOffer ? (
+                        <Button
+                          onClick={handleApplyCoupon}
+                          disabled={isApplyingCoupon || !couponCode.trim()}
+                          className="bg-[#D9C1A3] hover:bg-[#c4ac8e] text-neutral-950 cursor-pointer"
+                        >
+                          {isApplyingCoupon ? 'Applying...' : 'Apply'}
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={handleRemoveCoupon}
+                          className="bg-red-500 text-white hover:bg-red-600 px-4 py-2 rounded-md cursor-pointer"
+                        >
+                          Remove
+                        </Button>
+                      )}
+                    </div>
+                    {couponMessage.text && (
+                      <p
+                        className={`text-sm mt-1 ${
+                          couponMessage.type === 'success'
+                            ? 'text-green-600'
+                            : 'text-red-500'
+                        }`}
+                      >
+                        {couponMessage.text}
+                      </p>
+                    )}
+                    {appliedOffer && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        {appliedOffer.discountPercentage}% off up to ₹
+                        {appliedOffer.maxAmount}
+                      </p>
+                    )}
+                  </div>
+
                   {/* Price Details */}
                   <div className="border-t pt-4 space-y-3">
                     <div className="flex justify-between text-sm">
@@ -313,9 +489,17 @@ const Checkout = () => {
                     </div>
                     {priceDetails.totalDiscount > 0 && (
                       <div className="flex justify-between text-sm text-green-600">
-                        <span>Discount</span>
+                        <span>Item Discount</span>
                         <span>
                           -₹{priceDetails.totalDiscount.toLocaleString()}
+                        </span>
+                      </div>
+                    )}
+                    {priceDetails.couponDiscount > 0 && (
+                      <div className="flex justify-between text-sm text-green-600">
+                        <span>Coupon Discount ({appliedOffer?.offerCode})</span>
+                        <span>
+                          -₹{priceDetails.couponDiscount.toLocaleString()}
                         </span>
                       </div>
                     )}
@@ -347,9 +531,13 @@ const Checkout = () => {
                     Place Order
                   </Button>
 
-                  {priceDetails.totalDiscount > 0 && (
+                  {(priceDetails.totalDiscount > 0 ||
+                    priceDetails.couponDiscount > 0) && (
                     <div className="text-sm text-green-700 font-medium mt-2">
-                      You saved ₹{priceDetails.totalDiscount.toLocaleString()}{' '}
+                      You saved ₹
+                      {(
+                        priceDetails.totalDiscount + priceDetails.couponDiscount
+                      ).toLocaleString()}{' '}
                       on this order
                     </div>
                   )}

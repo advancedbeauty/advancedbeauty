@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Copy, Check, Sparkles } from 'lucide-react';
+import { Copy, Check } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -102,6 +102,7 @@ const Offers = () => {
       }
     } catch (error) {
       toast.error('Failed to load offers');
+      console.error('Error fetching offers:', error);
     } finally {
       setLoading(false);
     }

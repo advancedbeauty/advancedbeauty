@@ -144,6 +144,7 @@ const Checkout = () => {
         type: 'error',
       });
       setAppliedOffer(null);
+      console.error('Error applying coupon:', error);
     } finally {
       setIsApplyingCoupon(false);
     }

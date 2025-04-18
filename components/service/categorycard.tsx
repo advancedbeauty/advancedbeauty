@@ -205,6 +205,7 @@ const Categorycard: React.FC = () => {
                         title={service.name}
                         price={service.price}
                         listingPrice={service.listPrice}
+                        listingId={service.id}
                         category={service.category}
                       />
                     </CarouselItem>

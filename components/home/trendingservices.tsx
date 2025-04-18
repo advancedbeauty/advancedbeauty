@@ -202,6 +202,7 @@ const TrendingServices = () => {
                         price={service.price}
                         listingPrice={service.listPrice}
                         category={service.category}
+                        listingId={service.id}
                       />
                     </CarouselItem>
                   ))}

@@ -11,6 +11,7 @@ declare module 'next-auth' {
     user: {
       id: string;
       role?: string;
+      wishlistIds?: string[];
     } & DefaultSession['user'];
   }
 }

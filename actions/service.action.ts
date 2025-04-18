@@ -3,6 +3,25 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 
+type Service = {
+  id: string;
+  name: string;
+  slug: string;
+  category: string;
+  images: string[];
+  description: string | null;
+  price: number;
+  listPrice: number;
+  tags: string[];
+  avgRating?: number;
+};
+
+type ServiceResponse = {
+  success: boolean;
+  services?: Service[];
+  error?: string;
+};
+
 export async function createService(data: FormData) {
   try {
     const detailsRaw = data.get('details');
@@ -147,7 +166,7 @@ export async function checkServiceExists(name: string) {
         },
       },
     });
-    
+
     return {
       success: true,
       exists: !!existingService,
@@ -159,5 +178,37 @@ export async function checkServiceExists(name: string) {
       exists: false,
       error: 'Failed to check service name',
     };
+  }
+}
+
+export async function getWishlistServices(
+  serviceIds: string[],
+): Promise<ServiceResponse> {
+  try {
+    if (serviceIds.length === 0) {
+      return { success: true, services: [] };
+    }
+    const services = await prisma.service.findMany({
+      where: {
+        id: { in: serviceIds },
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        category: true,
+        images: true,
+        description: true,
+        price: true,
+        listPrice: true,
+        tags: true,
+        avgRating: true,
+      },
+    });
+    revalidatePath('/service');
+    return { success: true, services };
+  } catch (error) {
+    console.error('Error fetching wishlist services:', error);
+    return { success: false, error: 'Failed to fetch wishlist services' };
   }
 }

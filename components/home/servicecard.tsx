@@ -4,13 +4,14 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { toSlug } from '@/lib/utils';
-// import HeartButton from '@/components/wishlist/heart-btn';
+import HeartButton from '@/components/wishlist/Heartbutton';
 
 interface ServiceCardProps {
   src?: string;
   title: string;
   price: number;
   listingPrice: number;
+  listingId: string;
   category: string;
 }
 
@@ -19,6 +20,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   title,
   price,
   listingPrice,
+  listingId,
   category,
 }) => {
   const discountPercentage = Math.round(((price - listingPrice) / price) * 100);
@@ -26,7 +28,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
     <div className="w-full">
       <div className="relative overflow-hidden h-[230px] shadow-md">
         <div className="w-full h-full">
-          <Link href={`/services/${toSlug(category)}/${toSlug(title)}`} className="block w-full h-full">
+          <Link
+            href={`/services/${toSlug(category)}/${toSlug(title)}`}
+            className="block w-full h-full"
+          >
             <div className="w-full h-full relative">
               <Image
                 fill
@@ -44,7 +49,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           </div>
         )}
         <div className="absolute top-3 right-3 z-10">
-          {/* <HeartButton listingId={id} /> */}
+          <HeartButton listingId={listingId} />
         </div>
       </div>
       <div className="w-full flex flex-col items-center justify-center py-4 gap-2">

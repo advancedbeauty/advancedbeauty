@@ -3,6 +3,7 @@ import { auth } from '@/auth';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import RedirectCountdown from '@/components/ui/features/RedirectCountdown';
+import WishlistPage from '@/components/wishlist/Wishlistpage';
 
 const page = async () => {
   const session = await auth();
@@ -43,7 +44,7 @@ const page = async () => {
       </div>
     );
   }
-  return <div>page</div>;
+  return <WishlistPage />;
 };
 
 export default page;

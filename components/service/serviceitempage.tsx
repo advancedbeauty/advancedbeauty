@@ -309,7 +309,7 @@ const Serviceitempage: React.FC = () => {
                           </td>
                           <td className="py-2 text-gray-700">
                             {detail.lines.map((line, i) => (
-                              <p key={i}>{line}</p>
+                              <li key={i}>{line}</li>
                             ))}
                           </td>
                         </tr>

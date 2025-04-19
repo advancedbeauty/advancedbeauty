@@ -166,7 +166,9 @@ export async function getOrdersAdmin() {
     if (session.user.role !== 'A') {
       throw new Error('Unauthorized');
     }
-    const orders = await prisma.order.findMany({});
+    const orders = await prisma.order.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
     return { success: true, data: orders };
   } catch (error) {
     let errorMessage = 'An unexpected error occurred';

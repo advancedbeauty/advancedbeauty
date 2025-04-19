@@ -530,7 +530,7 @@ const Checkout = () => {
                       </div>
                     )}
                     <div className="flex justify-between text-sm">
-                      <span>Shipping</span>
+                      <span>Convenience charges</span>
                       <span>
                         {priceDetails.shippingFee === 0 ? (
                           <span className="text-green-600">Free</span>

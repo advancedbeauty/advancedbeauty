@@ -108,6 +108,7 @@ const data = {
     },
   ],
   ServiceCategoryData: [
+    
     {
       id: 1,
       title: 'Special Deals',
@@ -139,6 +140,78 @@ const data = {
         return `/services/${toSlug(this.title)}`;
       },
       image: '/images/servicecategory/nailextensionandart.jpg',
+    },
+    {
+      id: 5,
+      title: 'Makeup ',
+      get url() {
+        return `/services/${toSlug(this.title)}`;
+      },
+      image: '/images/servicecategory/Makeup.webp',
+    },
+    {
+      id: 6,
+      title: 'Hair care',
+      get url() {
+        return `/services/${toSlug(this.title)}`;
+      },
+      image: '/images/servicecategory/haircare.webp',
+    },
+    {
+      id: 7,
+      title: 'Mani & pedi',
+      get url() {
+        return `/services/${toSlug(this.title)}`;
+      },
+      image: '/images/servicecategory/manipedi.webp',
+    },
+    {
+      id: 8,
+      title: 'waxing',
+      get url() {
+        return `/services/${toSlug(this.title)}`;
+      },
+      image: '/images/servicecategory/waxing.webp',
+    },
+    {
+      id: 9,
+      title: 'Detan',
+      get url() {
+        return `/services/${toSlug(this.title)}`;
+      },
+      image: '/images/servicecategory/detan.webp',
+    },
+    {
+      id:10,
+      title: 'Bleach',
+      get url() {
+        return `/services/${toSlug(this.title)}`;
+      },
+      image: '/images/servicecategory/bleack.webp',
+    },
+    {
+      id: 11,
+      title: 'Cleanup',
+      get url() {
+        return `/services/${toSlug(this.title)}`;
+      },
+      image: '/images/servicecategory/cleanup.webp',
+    },
+    {
+      id: 12,
+      title: 'Facial',
+      get url() {
+        return `/services/${toSlug(this.title)}`;
+      },
+      image: '/images/servicecategory/facial.webp',
+    },
+    {
+      id: 13,
+      title: 'Eyelashes Extension',
+      get url() {
+        return `/services/${toSlug(this.title)}`;
+      },
+      image: '/images/servicecategory/eyelashes.webp',
     },
   ] as ServiceCategory[],
   ServiceTagsData: [

@@ -10,7 +10,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { getOrders } from '@/actions/order.action';
-import { useSession } from 'next-auth/react';
 import { toSlug } from '@/lib/utils';
 import {
   AlertDialog,
@@ -63,12 +62,9 @@ interface Order {
 }
 
 const Profilepage = () => {
-  const { data: session } = useSession();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const userName = session?.user?.name;
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -174,7 +170,7 @@ const Profilepage = () => {
             <div className="flex items-center gap-4">
               <ShoppingBag className="w-8 h-8" />
               <span className="text-xl font-medium">
-                You haven't placed any orders yet
+                You haven&apos;t placed any orders yet
               </span>
             </div>
             <Link

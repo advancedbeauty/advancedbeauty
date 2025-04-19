@@ -7,16 +7,20 @@ import NextLink from '@/components/ui/features/NextLink';
 interface ActiveLinkProps {
   href: string;
   text: string;
+  className?: string;
 }
 
-const ActiveLink: React.FC<ActiveLinkProps> = ({ href, text }) => {
+const ActiveLink: React.FC<ActiveLinkProps> = ({ href, text, className }) => {
   const pathname = usePathname();
   const isActive = pathname === href;
 
   return (
     <NextLink
       href={href}
-      className={isActive ? 'text-[#D9C1A3]' : 'hover:text-[#D9C1A3]'}
+      className={`${className} ${
+        isActive ? 'text-[#D9C1A3]' : 'hover:text-[#D9C1A3]'
+      }`}
+      
     >
       {text}
       

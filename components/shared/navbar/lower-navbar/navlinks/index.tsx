@@ -6,7 +6,7 @@ import ActiveLink from '@/components/ui/features/ActiveLink';
 const Navlinks = () => {
   const { data: session } = useSession();
   return (
-    <div className="flex gap-10 font-medium text-sm uppercase">
+    <div className="flex lg:flex-row flex-col gap-10 font-medium text-sm uppercase lg:text-white text-black">
       <ActiveLink href="/" text="Home" />
       <ActiveLink href="/services" text="Services" />
       <ActiveLink href="/offers" text="Offers" />

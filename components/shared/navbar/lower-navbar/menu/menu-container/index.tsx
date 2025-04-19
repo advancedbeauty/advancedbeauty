@@ -6,6 +6,7 @@ import Logo from '@/components/ui/features/Logo';
 import UpperNavbar from '@/components/shared/navbar/upper-navbar';
 import Container from '@/components/ui/features/Container';
 import Section from '@/components/ui/features/Section';
+import Navlinks from '@/components/shared/navbar/lower-navbar/navlinks';
 
 interface MenuContainerProps {
   onClose?: () => void;
@@ -41,6 +42,9 @@ const MenuContainer: React.FC<MenuContainerProps> = ({ onClose }) => {
             </div>
           </Container>
         </Section>
+        <div className="p-6">
+          <Navlinks />
+        </div>
       </div>
     </>
   );

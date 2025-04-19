@@ -1,5 +1,12 @@
 import { toSlug } from './utils';
 
+export type ServiceCategory = {
+  id: number;
+  title: string;
+  url: string;
+  image: string;
+};
+
 const data = {
   HomeAwardsData: [
     {
@@ -133,7 +140,7 @@ const data = {
       },
       image: '/images/servicecategory/nailextensionandart.jpg',
     },
-  ],
+  ] as ServiceCategory[],
   ServiceTagsData: [
     { id: '1', name: 'Premium' },
     { id: '2', name: 'Budget' },
@@ -148,4 +155,5 @@ const data = {
   ],
 };
 
+export const { ServiceCategoryData } = data;
 export default data;

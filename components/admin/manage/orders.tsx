@@ -48,6 +48,14 @@ import {
 import { format } from 'date-fns';
 import Image from 'next/image';
 
+type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JsonValue[]
+  | { [key: string]: JsonValue };
+
 interface OrderItem {
   id: string;
   name: string;
@@ -89,6 +97,38 @@ interface Order {
   };
 }
 
+interface ApiResponse {
+  success: boolean;
+  data?: unknown;
+  error?: string;
+}
+
+interface ApiOrder {
+  id: string;
+  name: string;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+  userId: string;
+  items: Record<string, JsonValue>[]; // Changed from JsonValue[] to be more specific
+  phone: string;
+  email: string;
+  address: string;
+  address2: string | null;
+  city: string;
+  country: string;
+  postalCode: string;
+  offerCode: string | null;
+  offerDiscount: number | null;
+  totalPrice: number;
+  paymentMethod: string;
+  isPaid: boolean;
+  startDate: string | Date | null;
+  endDate: string | Date | null;
+  isCompleted: boolean;
+  isCancelled: boolean;
+  isRefunded: boolean;
+}
+
 export default function OrdersManager() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -116,69 +156,120 @@ export default function OrdersManager() {
 
   const fetchOrders = async () => {
     setLoading(true);
-    const result = await getOrdersAdmin();
-    if (result.success && result.data) {
-      const formattedOrders: Order[] = result.data.map((order: any) => ({
-        ...order,
-        createdAt: new Date(order.createdAt).toISOString(),
-        updatedAt: new Date(order.updatedAt).toISOString(),
-        startDate: order.startDate
-          ? new Date(order.startDate).toISOString()
-          : '',
-        endDate: order.endDate
-          ? new Date(order.endDate).toISOString()
-          : undefined,
-        items: Array.isArray(order.items) ? (order.items as OrderItem[]) : [],
-      }));
-      setOrders(formattedOrders);
-    } else {
-      toast.error(result.error || 'Failed to fetch orders');
+    try {
+      const result = (await getOrdersAdmin()) as ApiResponse;
+      if (result.success && Array.isArray(result.data)) {
+        const formattedOrders: Order[] = result.data.map(
+          (apiOrder: ApiOrder) => ({
+            id: apiOrder.id,
+            userId: apiOrder.userId,
+            items: Array.isArray(apiOrder.items)
+              ? apiOrder.items.map((item: any) => ({
+                  id: item.id || '',
+                  name: item.name || '',
+                  category: item.category || '',
+                  price: Number(item.price) || 0,
+                  listPrice: Number(item.listPrice) || 0,
+                  date: item.date || '',
+                  time: item.time || '',
+                  image: item.image || '',
+                }))
+              : [],
+            name: apiOrder.name,
+            phone: apiOrder.phone,
+            email: apiOrder.email,
+            address: apiOrder.address,
+            address2: apiOrder.address2,
+            city: apiOrder.city,
+            country: apiOrder.country,
+            postalCode: apiOrder.postalCode,
+            offerCode: apiOrder.offerCode,
+            offerDiscount: apiOrder.offerDiscount,
+            totalPrice: apiOrder.totalPrice,
+            paymentMethod: apiOrder.paymentMethod,
+            isPaid: apiOrder.isPaid,
+            startDate: apiOrder.startDate
+              ? new Date(apiOrder.startDate).toISOString()
+              : '',
+            endDate: apiOrder.endDate
+              ? new Date(apiOrder.endDate).toISOString()
+              : undefined,
+            isCompleted: apiOrder.isCompleted,
+            isCancelled: apiOrder.isCancelled,
+            isRefunded: apiOrder.isRefunded,
+            createdAt: new Date(apiOrder.createdAt).toISOString(),
+            updatedAt: new Date(apiOrder.updatedAt).toISOString(),
+          }),
+        );
+        setOrders(formattedOrders);
+      } else {
+        toast.error(result.error || 'Failed to fetch orders');
+      }
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      toast.error('Failed to fetch orders');
     }
     setLoading(false);
   };
 
   const viewOrderDetails = async (orderId: string) => {
     setLoadingDetails(true);
-    const result = await getOrder(orderId);
-    if (result.success && result.data) {
-      const rawOrder = result.data;
-      const formattedOrder: Order = {
-        ...rawOrder,
-        createdAt: new Date(rawOrder.createdAt).toISOString(),
-        updatedAt: new Date(rawOrder.updatedAt).toISOString(),
-        startDate: rawOrder.startDate
-          ? new Date(rawOrder.startDate).toISOString()
-          : '',
-        endDate: rawOrder.endDate
-          ? new Date(rawOrder.endDate).toISOString()
-          : undefined,
-        items: Array.isArray(rawOrder.items)
-          ? (rawOrder.items as unknown as OrderItem[])
-          : [],
-        // Ensure all required properties are present
-        userId: rawOrder.userId || '',
-        name: rawOrder.name || '',
-        phone: rawOrder.phone || '',
-        email: rawOrder.email || '',
-        address: rawOrder.address || '',
-        city: rawOrder.city || '',
-        country: rawOrder.country || '',
-        postalCode: rawOrder.postalCode || '',
-        totalPrice: rawOrder.totalPrice || 0,
-        paymentMethod: rawOrder.paymentMethod || 'online',
-        isPaid: !!rawOrder.isPaid,
-        isCompleted: !!rawOrder.isCompleted,
-        isCancelled: !!rawOrder.isCancelled,
-        isRefunded: !!rawOrder.isRefunded,
-      };
+    try {
+      const result = (await getOrder(orderId)) as ApiResponse;
+      if (result.success && result.data) {
+        const apiOrder = result.data as ApiOrder;
+        const formattedOrder: Order = {
+          id: apiOrder.id,
+          userId: apiOrder.userId,
+          items: Array.isArray(apiOrder.items)
+            ? apiOrder.items.map((item: any) => ({
+                id: item.id || '',
+                name: item.name || '',
+                category: item.category || '',
+                price: Number(item.price) || 0,
+                listPrice: Number(item.listPrice) || 0,
+                date: item.date || '',
+                time: item.time || '',
+                image: item.image || '',
+              }))
+            : [],
+          name: apiOrder.name,
+          phone: apiOrder.phone,
+          email: apiOrder.email,
+          address: apiOrder.address,
+          address2: apiOrder.address2,
+          city: apiOrder.city,
+          country: apiOrder.country,
+          postalCode: apiOrder.postalCode,
+          offerCode: apiOrder.offerCode,
+          offerDiscount: apiOrder.offerDiscount,
+          totalPrice: apiOrder.totalPrice,
+          paymentMethod: apiOrder.paymentMethod,
+          isPaid: apiOrder.isPaid,
+          startDate: apiOrder.startDate
+            ? new Date(apiOrder.startDate).toISOString()
+            : '',
+          endDate: apiOrder.endDate
+            ? new Date(apiOrder.endDate).toISOString()
+            : undefined,
+          isCompleted: apiOrder.isCompleted,
+          isCancelled: apiOrder.isCancelled,
+          isRefunded: apiOrder.isRefunded,
+          createdAt: new Date(apiOrder.createdAt).toISOString(),
+          updatedAt: new Date(apiOrder.updatedAt).toISOString(),
+        };
 
-      setOrderDetails(formattedOrder);
-      setSelectedOrder(formattedOrder);
-      setOrderStatus(getOrderStatusValue(formattedOrder));
-      setPaymentStatus(formattedOrder.isPaid ? 'paid' : 'pending');
-      setPaymentMethod(formattedOrder.paymentMethod);
-    } else {
-      toast.error(result.error || 'Failed to fetch order details');
+        setOrderDetails(formattedOrder);
+        setSelectedOrder(formattedOrder);
+        setOrderStatus(getOrderStatusValue(formattedOrder));
+        setPaymentStatus(formattedOrder.isPaid ? 'paid' : 'pending');
+        setPaymentMethod(formattedOrder.paymentMethod);
+      } else {
+        toast.error(result.error || 'Failed to fetch order details');
+      }
+    } catch (error) {
+      console.error('Error fetching order details:', error);
+      toast.error('Failed to fetch order details');
     }
     setLoadingDetails(false);
   };
@@ -219,7 +310,15 @@ export default function OrdersManager() {
   const updateOrderStatus = async () => {
     if (!selectedOrder) return;
 
-    const updateData: any = {
+    interface OrderUpdateData {
+      isCompleted: boolean;
+      isCancelled: boolean;
+      isRefunded: boolean;
+      isPaid: boolean;
+      paymentMethod: string;
+    }
+
+    const updateData: OrderUpdateData = {
       isCompleted: false,
       isCancelled: false,
       isRefunded: false,
@@ -250,6 +349,7 @@ export default function OrdersManager() {
     try {
       return format(new Date(dateString), 'PPP');
     } catch (error) {
+      console.error('Error formatting date:', error);
       return 'Invalid date';
     }
   };

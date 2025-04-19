@@ -132,7 +132,7 @@ const Footer = () => {
       <div className="w-full mt-5 mb-12 lg:mb-0">
         <div className="border-b border-neutral-400"></div>
         <Container className="w-full py-5 flex justify-center items-center gap-2 md:gap-5 md:justify-between px-8 font-semibold text-sm flex-wrap text-center">
-          <span>Copyright © 2024 ADVANCED BEAUTY. All rights reserved.</span>
+          <span>Copyright © 2025 ADVANCED BEAUTY. All rights reserved.</span>
           <span>
             Designed with{' '}
             <span className={`text-red-500 text-lg select-none`}>&#x2665;</span>{' '}

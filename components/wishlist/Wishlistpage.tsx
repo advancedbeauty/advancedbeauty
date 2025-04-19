@@ -208,7 +208,7 @@ const WishlistPage = () => {
       </p>
       <Link
         href="/services"
-        className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+        className="cursor-pointer bg-[#D9C1A3] hover:bg-[#c4ac8e] text-neutral-950 py-2 px-4 rounded font-medium"
       >
         Browse Services
       </Link>
@@ -218,11 +218,6 @@ const WishlistPage = () => {
   return (
     <Section className="py-10 lg:py-14">
       <Container className="w-full">
-        <div className="flex justify-center items-center gap-5">
-          <Heading text="My" />
-          <Heading text="Wishlist" />
-        </div>
-
         {loading ? (
           <div className="w-full mt-10 lg:mt-14">
             <Carousel
@@ -247,6 +242,10 @@ const WishlistPage = () => {
           <EmptyWishlist />
         ) : (
           <div className="w-full mt-10 lg:mt-14">
+            <div className="flex justify-center items-center gap-5">
+              <Heading text="My" />
+              <Heading text="Wishlist" />
+            </div>
             <Carousel
               dir="ltr"
               className="w-full"

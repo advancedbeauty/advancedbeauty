@@ -11,6 +11,8 @@ import Image from 'next/image';
 import { Button } from '../ui/button';
 import { format } from 'date-fns';
 import { getAllOffers } from '@/actions/offer.action';
+import { createOrder } from '@/actions/order.action';
+import { toast } from 'sonner';
 
 interface CartItem {
   id: string;
@@ -215,22 +217,45 @@ const Checkout = () => {
       return;
     }
 
-    // Process order with or without coupon code
-    const orderData = {
-      ...formData,
-      items: cartItems,
-      offerId: appliedOffer?.id || null,
-      priceDetails: computePriceDetails(cartItems),
-    };
+    try {
+      const orderData = {
+        items: cartItems,
+        name: formData.fullName,
+        phone: formData.phoneNumber,
+        email: formData.email,
+        address: formData.addressLine1,
+        address2: formData.addressLine2 || undefined,
+        city: formData.city,
+        country: formData.country,
+        postalCode: formData.postalCode,
+        offerCode: appliedOffer?.offerCode || undefined,
+        offerDiscount: appliedOffer ? priceDetails.couponDiscount : undefined,
+        totalPrice: priceDetails.total,
+        paymentMethod: 'pending', // You can update this based on payment selection
+        isPaid: false,
+        startDate: new Date(),
+        isCompleted: false,
+        isCancelled: false,
+        isRefunded: false,
+      };
+      const response = await createOrder(orderData);
+      if (response.success) {
+        // Order was created successfully
+        toast.success('Order placed successfully!');
 
-    // Process order
-    // const orderPlaced = await processOrder(orderData);
+        // Clear cart based on checkout type
+        const storageKey = checkoutType === 'cart' ? CART_KEY : BUY_NOW_KEY;
+        localStorage.removeItem(storageKey);
 
-    // if (orderPlaced) {
-    // Redirect to order confirmation page
-    console.log('Order placed successfully!', orderData);
-    // router.push('/orders/order-confirmation');
-    // }
+        // Redirect to order confirmation or orders page
+      } else {
+        // Handle error
+        toast.error(response.error || 'Error placing order');
+      }
+    } catch (error) {
+      console.error('Error submitting order:', error);
+      toast.error('Error placing order');
+    }
   };
 
   const priceDetails = computePriceDetails(cartItems);

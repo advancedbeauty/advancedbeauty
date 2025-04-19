@@ -67,6 +67,17 @@ interface OrderItem {
   image: string;
 }
 
+interface ApiOrderItem {
+  id?: string;
+  name?: string;
+  category?: string;
+  price?: string | number;
+  listPrice?: string | number;
+  date?: string;
+  time?: string;
+  image?: string;
+}
+
 interface Order {
   id: string;
   userId: string;
@@ -164,7 +175,7 @@ export default function OrdersManager() {
             id: apiOrder.id,
             userId: apiOrder.userId,
             items: Array.isArray(apiOrder.items)
-              ? apiOrder.items.map((item: any) => ({
+              ? apiOrder.items.map((item: ApiOrderItem) => ({
                   id: item.id || '',
                   name: item.name || '',
                   category: item.category || '',
@@ -222,7 +233,7 @@ export default function OrdersManager() {
           id: apiOrder.id,
           userId: apiOrder.userId,
           items: Array.isArray(apiOrder.items)
-            ? apiOrder.items.map((item: any) => ({
+            ? apiOrder.items.map((item: ApiOrderItem) => ({
                 id: item.id || '',
                 name: item.name || '',
                 category: item.category || '',

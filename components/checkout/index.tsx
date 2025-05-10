@@ -6,7 +6,7 @@ import Container from '../ui/features/Container';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '../ui/button';
 import { format } from 'date-fns';
@@ -39,6 +39,7 @@ const CART_KEY = 'ab_service__cart__';
 const BUY_NOW_KEY = 'ab_service__buy_now__';
 
 const Checkout = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const checkoutType = searchParams.get('type');
 
@@ -239,6 +240,7 @@ const Checkout = () => {
         isRefunded: false,
       };
       const response = await createOrder(orderData);
+
       if (response.success) {
         // Order was created successfully
         toast.success('Order placed successfully!');
@@ -248,9 +250,11 @@ const Checkout = () => {
         localStorage.removeItem(storageKey);
 
         // Redirect to order confirmation or orders page
+        router.push('/order-confirmation');
       } else {
         // Handle error
         toast.error(response.error || 'Error placing order');
+        router.push('/auth?callbackUrl=/checkout');
       }
     } catch (error) {
       console.error('Error submitting order:', error);

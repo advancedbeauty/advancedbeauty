@@ -64,7 +64,7 @@ const OrderConfirmationPage = () => {
             <Package className="h-4 w-4 text-blue-600" />
             <AlertTitle className="text-blue-800">Order Processing</AlertTitle>
             <AlertDescription className="text-blue-700">
-              Your booking is being processed. You'll receive a confirmation email
+              Your booking is being processed. You&apos;ll receive a confirmation email
               shortly.
             </AlertDescription>
           </Alert>

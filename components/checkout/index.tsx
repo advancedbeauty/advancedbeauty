@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 import { getAllOffers } from '@/actions/offer.action';
 import { createOrder } from '@/actions/order.action';
 import { toast } from 'sonner';
+import { getOrderConfirmationHtml } from '../mails/order-confirm';
 
 interface CartItem {
   id: string;
@@ -51,6 +52,8 @@ const Checkout = () => {
   }>({ text: '', type: '' });
   const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
   const [appliedOffer, setAppliedOffer] = useState<Offer | null>(null);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // State to manage form inputs
   const [formData, setFormData] = useState({
@@ -218,6 +221,7 @@ const Checkout = () => {
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const orderData = {
         items: cartItems,
@@ -242,6 +246,31 @@ const Checkout = () => {
       const response = await createOrder(orderData);
 
       if (response.success) {
+
+        const emailHtml = getOrderConfirmationHtml({
+          fullName: formData.fullName,
+          cartItems,
+          priceDetails,
+        });
+
+        try {
+          const resp = await fetch('/api/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              to: formData.email,
+              subject: 'Booking Confirmation – Your Booking Has Been Received',
+              html: emailHtml,
+            }),
+          });
+          const data = await resp.json();
+          if (!data.success) {
+            console.warn('Email send failed:', data.error);
+          }
+        } catch (err) {
+          console.error('Network error sending email:', err);
+        }
+
         // Order was created successfully
         toast.success('Order placed successfully!');
 
@@ -259,6 +288,8 @@ const Checkout = () => {
     } catch (error) {
       console.error('Error submitting order:', error);
       toast.error('Error placing order');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -275,7 +306,7 @@ const Checkout = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 !p-4 mb-5">
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4" aria-disabled={isSubmitting}>
                 {/* Name and Phone Number */}
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -557,8 +588,10 @@ const Checkout = () => {
                     onClick={() =>
                       document.querySelector('form')?.requestSubmit()
                     }
+                    disabled={isSubmitting}
+                    aria-disabled={isSubmitting}
                   >
-                    Place Order
+                    {isSubmitting ? 'Placing Order...' : 'Place Order'}
                   </Button>
 
                   {(priceDetails.totalDiscount > 0 ||

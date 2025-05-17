@@ -60,7 +60,7 @@ export function getOrderConfirmationHtml({
       /* Container */
       .email-wrapper {
         width: 100%;
-        background-color: #f4f4f4;
+        
         padding: 20px 0;
       }
       .email-content {

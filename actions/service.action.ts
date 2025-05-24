@@ -31,7 +31,7 @@ export async function createService(data: FormData) {
     const service = await prisma.service.create({
       data: {
         name: (data.get('name') as string).trim(),
-        slug: (data.get('name') as string).trim().toLowerCase().replace(/\s+/g, '-'),
+        slug: (data.get('name') as string).trim().toLowerCase().replace(/\s+/g, '-').replace("&","and"),
         category: data.get('category') as string,
         description: data.get('description') as string,
         price: parseFloat(data.get('price') as string),
@@ -61,7 +61,7 @@ export async function updateService(id: string, data: FormData) {
       where: { id },
       data: {
         name: (data.get('name') as string).trim(),
-        slug: (data.get('name') as string).trim().toLowerCase().replace(/\s+/g, '-'),
+        slug: (data.get('name') as string).trim().toLowerCase().replace(/\s+/g, '-').replace("&","and"),
         category: data.get('category') as string,
         description: data.get('description') as string,
         price: parseFloat(data.get('price') as string),

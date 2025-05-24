@@ -48,7 +48,7 @@ const DashboardSideBar = () => {
 
       <hr />
 
-      <SidebarContent className="bg-black">
+      <SidebarContent className="bg-black text-white">
         <SidebarGroup>
           <SidebarGroupLabel className="text-gray-400">
             Dashboard

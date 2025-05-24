@@ -195,7 +195,7 @@ const Checkout = () => {
     }
 
     // Shipping is free if subtotal is ₹1000 or more; otherwise, ₹50.
-    const shippingFee = subtotal >= 1000 ? 0 : 50;
+    const shippingFee = netAmount >= 1500 ? 0 : netAmount >= 1000 ? 49 : 99;
     const total = netAmount - couponDiscount + shippingFee;
 
     return {

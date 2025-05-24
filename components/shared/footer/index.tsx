@@ -106,7 +106,8 @@ const Footer = () => {
             <div>
               <span className="font-semibold text-lg">Call us at</span>
               <div className="flex flex-col mt-3 text-neutral-400">
-                <span>+91 8826207080</span>
+                <span>+91 8506097080</span>
+                <span>+91 9821742350</span>
                 <span>Monday to Friday: 09:00 AM - 09:00 PM</span>
                 <span>Saturday: 09:00 AM - 07:00 PM</span>
               </div>

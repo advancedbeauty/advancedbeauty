@@ -39,7 +39,6 @@ const Categorycard: React.FC = () => {
   const pathname = usePathname();
   const category = slugToTitle(pathname.split('/')[2]);
   const observer = useRef<IntersectionObserver | null>(null);
-  const lastItemRef = useRef<HTMLDivElement | null>(null);
 
   const fetchServices = useCallback(async () => {
     setLoading(true);

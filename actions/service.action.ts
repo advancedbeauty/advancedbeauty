@@ -1,6 +1,7 @@
 'use server';
 
 import prisma from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
 type Service = {
@@ -95,26 +96,28 @@ export async function deleteService(id: string) {
   }
 }
 
-export async function getServices(category?: string) {
+export async function getServices(category?: string, page = 1, limit = 10) {
   try {
-    if (category) {
-      const services = await prisma.service.findMany({
-        where: {
-          category: {
-            equals: category,
-            mode: 'insensitive',
-          },
-          isPublished: true,
+    const skip = (page - 1) * limit;
+
+    const whereClause: Prisma.ServiceWhereInput = {
+      isPublished: true,
+      ...(category && {
+        category: {
+          equals: category,
+          mode: Prisma.QueryMode.insensitive, // ✅ use enum here
         },
-        orderBy: { createdAt: 'desc' },
-      });
-      return { success: true, data: services };
-    } else {
-      const services = await prisma.service.findMany({
-        orderBy: { createdAt: 'desc' },
-      });
-      return { success: true, data: services };
-    }
+      }),
+    };
+
+    const services = await prisma.service.findMany({
+      where: whereClause,
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    });
+
+    return { success: true, data: services };
   } catch (error) {
     console.error('Get services error:', error);
     return { success: false, error: 'Failed to fetch services' };

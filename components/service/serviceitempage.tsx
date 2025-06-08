@@ -300,22 +300,18 @@ const Serviceitempage: React.FC = () => {
                 {typeof service.details === 'string' ? (
                   <p className="text-gray-700">{service.details}</p>
                 ) : (
-                  <table className="w-full border-collapse">
-                    <tbody>
-                      {service.details.map((detail, idx) => (
-                        <tr key={idx} className="border-b">
-                          <td className="py-2 font-semibold text-gray-800 w-1/3">
-                            {detail.heading}
-                          </td>
-                          <td className="py-2 text-gray-700">
-                            {detail.lines.map((line, i) => (
-                              <li key={i}>{line}</li>
-                            ))}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <div className="w-full">
+                    {service.details.map((detail, idx) => (
+                      <div key={idx} className="mb-4 border-b pb-4">
+                        <div className="font-semibold text-gray-800 mb-1">{detail.heading}</div>
+                        <ul className="list-disc list-inside text-gray-700">
+                          {detail.lines.map((line, i) => (
+                            <li key={i}>{line}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             )}

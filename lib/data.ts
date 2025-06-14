@@ -143,7 +143,7 @@ const data = {
     },
     {
       id: 5,
-      title: 'Makeup ',
+      title: 'Makeup',
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
@@ -159,7 +159,7 @@ const data = {
     },
     {
       id: 7,
-      title: 'Mani & pedi',
+      title: 'Mani and pedi',
       get url() {
         return `/services/${toSlug(this.title)}`;
       },

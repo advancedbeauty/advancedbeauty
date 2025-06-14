@@ -63,7 +63,7 @@ export async function updateService(id: string, data: FormData) {
       data: {
         name: (data.get('name') as string).trim(),
         slug: (data.get('name') as string).trim().toLowerCase().replace(/\s+/g, '-').replace("&","and"),
-        category: data.get('category')?.toString().replace("&","and").trim() as string,,
+        category: data.get('category')?.toString().replace("&","and").trim() as string,
         description: data.get('description') as string,
         price: parseFloat(data.get('price') as string),
         listPrice: parseFloat(data.get('listPrice') as string),

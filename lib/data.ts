@@ -159,7 +159,7 @@ const data = {
     },
     {
       id: 7,
-      title: 'Mani and pedi',
+      title: 'Mani & pedi',
       get url() {
         return `/services/${toSlug(this.title)}`;
       },

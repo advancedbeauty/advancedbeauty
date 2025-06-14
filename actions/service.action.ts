@@ -96,9 +96,8 @@ export async function deleteService(id: string) {
   }
 }
 
-export async function getServices(category?: string, page = 1, limit = 10) {
+export async function getServices(category?: string) {
   try {
-    const skip = (page - 1) * limit;
 
     const whereClause: Prisma.ServiceWhereInput = {
       isPublished: true,
@@ -113,8 +112,6 @@ export async function getServices(category?: string, page = 1, limit = 10) {
     const services = await prisma.service.findMany({
       where: whereClause,
       orderBy: { createdAt: 'desc' },
-      skip,
-      take: limit,
     });
 
     return { success: true, data: services };

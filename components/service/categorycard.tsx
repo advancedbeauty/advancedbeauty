@@ -43,7 +43,7 @@ const Categorycard: React.FC = () => {
   const fetchServices = useCallback(async () => {
     setLoading(true);
     try {
-      const result = (await getServices(category, page, LIMIT)) as ServiceResponse;
+      const result = (await getServices(category)) as ServiceResponse;
 
       if (result.success) {
         // Deduplicate services

@@ -425,7 +425,7 @@ export default function ServiceItem() {
     );
   });
 
-  const totalPages = Math.ceil(filteredServices.length / servicesPerPage);
+  const totalPages = Math.ceil(services.length / servicesPerPage);
   const indexOfLastService = currentPage * servicesPerPage;
   const indexOfFirstService = indexOfLastService - servicesPerPage;
   const currentServices = filteredServices.slice(indexOfFirstService, indexOfLastService);
@@ -676,7 +676,6 @@ export default function ServiceItem() {
             <CardTitle className="text-2xl font-bold">Services</CardTitle>
             <Button
               variant="outline"
-              onClick={fetchServices}
               disabled={loading}
             >
               <RefreshCw
@@ -827,6 +826,7 @@ export default function ServiceItem() {
                   <div className="flex gap-1">
                     <Button
                       variant="outline"
+                      className='hover:cursor-pointer'
                       size="sm"
                       onClick={() => paginate(currentPage - 1)}
                       disabled={currentPage === 1}
@@ -850,6 +850,7 @@ export default function ServiceItem() {
                           key={pageNum}
                           variant={currentPage === pageNum ? 'default' : 'outline'}
                           size="sm"
+                          className='hover:cursor-pointer'
                           onClick={() => paginate(pageNum)}
                         >
                           {pageNum}
@@ -860,7 +861,8 @@ export default function ServiceItem() {
                       variant="outline"
                       size="sm"
                       onClick={() => paginate(currentPage + 1)}
-                      disabled={currentPage === totalPages || totalPages === 0}
+                      className='hover:cursor-pointer'
+                      disabled={filteredServices.length == 0 || currentPage >= totalPages}
                     >
                       <ChevronRight className="h-4 w-4" />
                     </Button>

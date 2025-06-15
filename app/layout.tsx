@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import { SessionProvider } from 'next-auth/react';
 import { Toaster } from 'sonner';
+import NextTopLoader from 'nextjs-toploader';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -30,6 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.className} antialiased`}>
+        <NextTopLoader color="#fb2c36" height={2} showSpinner={false} />
         <SessionProvider>
           {children} 
           <Toaster />

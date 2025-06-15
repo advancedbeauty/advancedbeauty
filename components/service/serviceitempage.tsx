@@ -131,7 +131,6 @@ const Serviceitempage: React.FC = () => {
       }
       try {
         const result = await getServiceBySlug(slug);
-        console.log('Service result:', result);
         if (!result) {
           setError('Service not found');
         } else {

@@ -38,19 +38,19 @@ const Footer = () => {
               color="#000"
               className="bg-neutral-400 hover:bg-gray-100 transition duration-150"
               icon={CgFacebook}
-              href="/"
+              href="https://www.facebook.com/share/1A81X5z71Q/"
             />
             <SocialIcon
               color="#000"
               className="bg-neutral-400 hover:bg-gray-100 transition duration-150"
               icon={FaInstagram}
-              href="/"
+              href="https://www.instagram.com/advanced_beauty_service"
             />
             <SocialIcon
               color="#000"
               className="bg-neutral-400 hover:bg-gray-100 transition duration-150"
               icon={FaYoutube}
-              href="/"
+              href="https://www.youtube.com/@Advanced_beauty"
             />
             <SocialIcon
               color="#000"

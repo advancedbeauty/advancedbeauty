@@ -74,6 +74,7 @@ export async function getHeroBanners() {
     const banners = await prisma.heroBanner.findMany({
       orderBy: { createdAt: 'desc' },
     });
+    revalidatePath('/admin/create/hero-banner');
     return { success: true, data: banners };
   } catch (error) {
     let errorMessage = 'An unexpected error occurred';

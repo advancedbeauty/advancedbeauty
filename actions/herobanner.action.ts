@@ -20,6 +20,7 @@ export async function createHeroBanner(formData: FormData) {
     });
 
     revalidatePath('/admin/create/hero-banner');
+    revalidatePath('/');
     return { success: true, data: banner };
   } catch (error) {
     let errorMessage = 'An unexpected error occurred';
@@ -43,6 +44,7 @@ export async function updateHeroBanner(id: string, formData: FormData) {
     });
 
     revalidatePath('/admin/create/hero-banner');
+    revalidatePath('/');
     return { success: true, data: banner };
   } catch (error) {
     let errorMessage = 'An unexpected error occurred';
@@ -59,6 +61,7 @@ export async function deleteHeroBanner(id: string) {
       where: { id },
     });
     revalidatePath('/admin/create/hero-banner');
+    revalidatePath('/');
     return { success: true };
   } catch (error) {
     let errorMessage = 'An unexpected error occurred';

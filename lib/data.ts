@@ -111,19 +111,11 @@ const data = {
     
     {
       id: 1,
-      title: 'Special Deals',
+      title: 'Packages',
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
       image: '/images/servicecategory/specialdeals.png',
-    },
-    {
-      id: 2,
-      title: 'Threading',
-      get url() {
-        return `/services/${toSlug(this.title)}`;
-      },
-      image: '/images/servicecategory/threading.webp',
     },
     {
       id: 3,
@@ -135,7 +127,7 @@ const data = {
     },
     {
       id: 4,
-      title: 'nail extension and art',
+      title: 'nail extension',
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
@@ -151,59 +143,11 @@ const data = {
     },
     {
       id: 6,
-      title: 'Hair care',
+      title: 'Hair Extension',
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
       image: '/images/servicecategory/haircare.webp',
-    },
-    {
-      id: 7,
-      title: 'Mani & pedi',
-      get url() {
-        return `/services/${toSlug(this.title)}`;
-      },
-      image: '/images/servicecategory/manipedi.webp',
-    },
-    {
-      id: 8,
-      title: 'waxing',
-      get url() {
-        return `/services/${toSlug(this.title)}`;
-      },
-      image: '/images/servicecategory/waxing.webp',
-    },
-    {
-      id: 9,
-      title: 'Detan',
-      get url() {
-        return `/services/${toSlug(this.title)}`;
-      },
-      image: '/images/servicecategory/detan.webp',
-    },
-    {
-      id:10,
-      title: 'Bleach',
-      get url() {
-        return `/services/${toSlug(this.title)}`;
-      },
-      image: '/images/servicecategory/bleack.webp',
-    },
-    {
-      id: 11,
-      title: 'Cleanup',
-      get url() {
-        return `/services/${toSlug(this.title)}`;
-      },
-      image: '/images/servicecategory/cleanup.webp',
-    },
-    {
-      id: 12,
-      title: 'Facial',
-      get url() {
-        return `/services/${toSlug(this.title)}`;
-      },
-      image: '/images/servicecategory/facial.webp',
     },
     {
       id: 13,

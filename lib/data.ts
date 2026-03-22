@@ -111,15 +111,23 @@ const data = {
     
     {
       id: 1,
-      title: 'Packages',
+      title: 'Special Deals',
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
       image: '/images/servicecategory/specialdeals.png',
     },
     {
+      id: 2,
+      title: 'Party Make-up',
+      get url() {
+        return `/services/${toSlug(this.title)}`;
+      },
+      image: '/images/servicecategory/prebridal.webp',
+    },
+    {
       id: 3,
-      title: 'Pre Bridal',
+      title: 'Engagement & Reception Make-up',
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
@@ -127,7 +135,7 @@ const data = {
     },
     {
       id: 4,
-      title: 'nail extension',
+      title: 'Bridal Make-up',
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
@@ -135,7 +143,7 @@ const data = {
     },
     {
       id: 5,
-      title: 'Makeup',
+      title: 'Pre Bridal Make-up',
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
@@ -143,6 +151,14 @@ const data = {
     },
     {
       id: 6,
+      title: 'Nail Extension',
+      get url() {
+        return `/services/${toSlug(this.title)}`;
+      },
+      image: '/images/servicecategory/haircare.webp',
+    },
+    {
+      id: 7,
       title: 'Hair Extension',
       get url() {
         return `/services/${toSlug(this.title)}`;

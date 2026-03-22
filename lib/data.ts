@@ -139,7 +139,7 @@ const data = {
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
-      image: '/images/servicecategory/prebridal.webp',
+      image: '/images/servicecategory/BridalMakeup.jpeg',
     },
     {
       id: 5,

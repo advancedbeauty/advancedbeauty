@@ -115,7 +115,7 @@ const data = {
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
-      image: '/images/servicecategory/specialdeals.png',
+      image: '/images/servicecategory/SpecialDeals.jpeg',
     },
     {
       id: 2,
@@ -123,7 +123,7 @@ const data = {
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
-      image: '/images/servicecategory/prebridal.webp',
+      image: '/images/servicecategory/PartyMakeup.jpeg',
     },
     {
       id: 3,
@@ -131,7 +131,7 @@ const data = {
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
-      image: '/images/servicecategory/prebridal.webp',
+      image: '/images/servicecategory/EngagementMakeup.jpeg',
     },
     {
       id: 4,
@@ -139,7 +139,7 @@ const data = {
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
-      image: '/images/servicecategory/nailextensionandart.jpg',
+      image: '/images/servicecategory/prebridal.webp',
     },
     {
       id: 5,
@@ -147,7 +147,7 @@ const data = {
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
-      image: '/images/servicecategory/Makeup.webp',
+      image: '/images/servicecategory/PreBridal.jpeg',
     },
     {
       id: 6,
@@ -155,7 +155,7 @@ const data = {
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
-      image: '/images/servicecategory/haircare.webp',
+      image: '/images/servicecategory/NailExtensions.jpeg',
     },
     {
       id: 7,

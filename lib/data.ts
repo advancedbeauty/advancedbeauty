@@ -119,7 +119,7 @@ const data = {
     },
     {
       id: 2,
-      title: 'Party Make-up',
+      title: 'Party Makeup',
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
@@ -127,7 +127,7 @@ const data = {
     },
     {
       id: 3,
-      title: 'Engagement & Reception Make-up',
+      title: 'Engagement & Reception Makeup',
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
@@ -135,7 +135,7 @@ const data = {
     },
     {
       id: 4,
-      title: 'Bridal Make-up',
+      title: 'Bridal Makeup',
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
@@ -143,7 +143,7 @@ const data = {
     },
     {
       id: 5,
-      title: 'Pre Bridal Make-up',
+      title: 'Pre Bridal Makeup',
       get url() {
         return `/services/${toSlug(this.title)}`;
       },
